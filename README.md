@@ -8,7 +8,7 @@ words in the wordlist, but I soon realized that base 256 was far more
 convenient, since base 256 corresponds to a single whole byte.
 
 You might expect data encoded in base 256 to be more space efficient
-than data encoded in base 16, but with this particulare set of symbols,
+than data encoded in base 16, but with this particular set of symbols,
 that is not the case! Likewise, you have to type more, not less, than
 you would if you use my base 256 instead of base 16. So why?
 
