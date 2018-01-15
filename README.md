@@ -17,7 +17,7 @@ onto a computer less error-prone compared to typing in the base 16 or
 [base 64](https://en.wikipedia.org/wiki/Base64) encoding of said data.
 Whereas manually typing out base 64 is painful, and base 16 makes it
 easy to lose track of where you are while typing, `lastresort` attempts
-to remedy both of these problems by using a 256 different words from
+to remedy both of these problems by using 256 different words from
 the EFF autocomplete-friendly wordlist.
 
 Sample use-cases include typing in your SSH private key on a computer
