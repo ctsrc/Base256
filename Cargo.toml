@@ -5,10 +5,14 @@ license = "ISC"
 documentation = "https://github.com/yarwelp/base256/blob/master/README.md"
 readme = "README.md"
 repository = "https://github.com/yarwelp/base256"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Erik Nordstrøm <erik@nordstroem.no>"]
 homepage = "https://yarwelp.github.io/base256/"
 categories = ["command-line-utilities"]
+
+[[bin]]
+name = "lastresort"
+path = "src/main.rs"
 
 [dependencies]
 clap = {version = "~2.29.1", features = ["yaml"]}

@@ -1,5 +1,5 @@
-name: base256
-version: "0.1.0"
+name: lastresort
+version: "0.2.0"
 about: Encode and decode data in base 256
 args:
         - action_decode:

@@ -1,4 +1,4 @@
-# `base256`(1) – Encode and decode data in base 256
+# `lastresort`(1) – Encode and decode data in base 256
 
 Command-line utility for encoding and decoding arbitrary binary data
 to and from easily typed words from the EFF autocomplete-friendly wordlist.
@@ -12,11 +12,11 @@ than data encoded in base 16, but with this particular set of symbols,
 that is not the case! Likewise, you have to type more, not less, than
 you would if you use my base 256 instead of base 16. So why?
 
-The purpose of `base256` is to make manual input of binary data
+The purpose of `lastresort` is to make manual input of binary data
 onto a computer less error-prone compared to typing in the base 16 or
 [base 64](https://en.wikipedia.org/wiki/Base64) encoding of said data.
 Whereas manually typing out base 64 is painful, and base 16 makes it
-easy to lose track of where you are while typing, `base256` attempts
+easy to lose track of where you are while typing, `lastresort` attempts
 to remedy both of these problems by using a 256 different words from
 the EFF autocomplete-friendly wordlist.
 
@@ -35,7 +35,7 @@ For example, given the following private key:
     p0r3nHUmj+QkHx6zg7YdAAAAEGVyaWtuQGxpYmVyYXRpb24BAgMEBQ==
     -----END OPENSSH PRIVATE KEY-----
 
-The corresponding base256 encoding is:
+The corresponding base 256 encoding is:
 
     carrot carrot carrot carrot carrot dealer depot dictionary directory
     dryer badass dugout dustpan depot dryer ebook ebook dimple badass
@@ -90,14 +90,12 @@ The corresponding base256 encoding is:
     badass dominoes depot elsewhere carrot carrot carrot carrot carrot
     alchemy 
 
-Uhhh... I might have to rethink this...
-
 ## Usage
 
 ```
-base256 [-d | --decode]
-base256 -h | --help
-base256 -V | --version
+lastresort [-d | --decode]
+lastresort -h | --help
+lastresort -V | --version
 ```
 
 Reads from `stdin` and writes to `stdout`.
