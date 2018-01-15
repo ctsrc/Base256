@@ -28,3 +28,8 @@ Reads from `stdin` and writes to `stdout`.
 ## See also
 
 * [`pgen`(1)](https://crates.io/crates/pgen)
+
+## Installation
+
+1. [Install Rust](https://www.rust-lang.org/en-US/install.html).
+2. Run `cargo install base256`
