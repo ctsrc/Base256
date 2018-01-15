@@ -20,6 +20,11 @@ easy to lose track of where you are while typing, `base256` attempts
 to remedy both of these problems by using a 256 different words from
 the EFF autocomplete-friendly wordlist.
 
+Sample use-cases include typing in your SSH private key on a computer
+that is running a live USB stick copy of its OS without persistent
+storage, and which doesn't have a useable webcamera leaving you
+unable to enter the data using a QR-code.
+
 ## Usage
 
 ```
