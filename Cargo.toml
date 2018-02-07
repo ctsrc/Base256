@@ -2,12 +2,12 @@
 name = "base256"
 description = "Encode and decode data in base 256"
 license = "ISC"
-documentation = "https://github.com/yarwelp/base256/blob/master/README.md"
+documentation = "https://github.com/ctsrc/base256/blob/master/README.md"
 readme = "README.md"
-repository = "https://github.com/yarwelp/base256"
+repository = "https://github.com/ctsrc/base256"
 version = "0.2.0"
 authors = ["Erik Nordstrøm <erik@nordstroem.no>"]
-homepage = "https://yarwelp.github.io/base256/"
+homepage = "https://ctsrc.github.io/base256/"
 categories = ["command-line-utilities"]
 
 [[bin]]
