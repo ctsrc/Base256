@@ -7,7 +7,7 @@ readme = "README.md"
 repository = "https://github.com/ctsrc/Base256"
 version = "0.2.0"
 authors = ["Erik Nordstrøm <erik@nordstroem.no>"]
-homepage = "https://github.com/ctsrc/Base256"
+homepage = "https://ctsrc.github.io/Base256"
 categories = ["command-line-utilities"]
 
 [[bin]]
