@@ -30,22 +30,16 @@ struct Cli {
     decode: bool,
 }
 
-fn main ()
-{
+fn main() {
     let cli = Cli::parse();
 
-    if cli.decode
-    {
+    if cli.decode {
         unimplemented!();
-    }
-    else
-    {
-        for byte in stdin().bytes()
-        {
-            match byte
-            {
+    } else {
+        for byte in stdin().bytes() {
+            match byte {
                 Ok(x) => print!("{} ", WL_AUTOCOMPLETE[x as usize]),
-                _ => break
+                _ => break,
             }
         }
     }
