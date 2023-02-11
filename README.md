@@ -1,11 +1,8 @@
-# `lastresort`(1) – Encode and decode data in base 256
+# `lastresort`(1) – Encode and decode data in base 256 easily typed words
 
 [![Crates.io](https://img.shields.io/crates/v/base256?style=flat-square)](https://crates.io/crates/base256)
 [![Crates.io](https://img.shields.io/crates/d/base256?style=flat-square)](https://crates.io/crates/base256)
 [![License](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](LICENSE)
-
-Command-line utility for encoding and decoding arbitrary binary data
-to and from easily typed words.
 
 You might expect data encoded in base 256 to be more space efficient
 than data encoded in base 16, but with this particular set of symbols,
@@ -15,14 +12,51 @@ you would if you use my base 256 instead of base 16. So why?
 The purpose of `lastresort` is to make manual input of binary data
 onto a computer less error-prone compared to typing in the base 16 or
 [base 64](https://en.wikipedia.org/wiki/Base64) encoding of said data.
-Whereas manually typing out base 64 is painful, and base 16 makes it
-easy to lose track of where you are while typing, `lastresort` attempts
+
+Manually typing out base 64 is painful, and base 16 makes it
+easy to lose track of where you are while typing. `lastresort` attempts
 to remedy both of these problems by using human words.
+
+Here is a quick example:
+
+Imagine a file with three bytes in it. In hexadecimal this file
+might look like:
+
+```text
+00000000: 0505 05                                  ...
+```
+
+In other words, this file contains three bytes `0x05 0x05 0x05`.
+
+That's not so bad, and it's quick and easy to type even in hex.
+
+But when the amount of data gets bigger, it gets more and more tricky
+to manually type in the bytes by hand. When might you want to do so?
 
 Sample use-cases include typing in your SSH private key on a computer
 that is running a live USB stick copy of its OS without persistent
 storage, and which doesn't have a useable webcamera leaving you
 unable to enter the data using a QR-code.
+
+Anyways, to continue with the example from above of the three bytes.
+
+In base64 this is:
+
+```text
+BQUF
+```
+
+In `lastresort` base 256 using the default codec PGP Word List, it is:
+
+```text
+adult amulet adult
+```
+
+By now, you should see both:
+
+- Why the name of this command is `lastresort`, and
+- How in the case of greater amount of bytes, `lastresort` can be
+  of great help :)
 
 ## Codecs
 
