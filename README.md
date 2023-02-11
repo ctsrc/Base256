@@ -7,7 +7,7 @@
 You might expect data encoded in base 256 to be more space efficient
 than data encoded in base 16, but with this particular set of symbols,
 that is not the case! Likewise, you have to type more, not less, than
-you would if you use my base 256 instead of base 16. So why?
+you would if you use this base 256 instead of base 16. So why?
 
 The purpose of `lastresort` is to make manual input of binary data
 onto a computer less error-prone compared to typing in the base 16 or
