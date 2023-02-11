@@ -5,25 +5,22 @@
 [![License](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](LICENSE)
 
 You might expect data encoded in base 256 to be more space efficient
-than data encoded in base 16, but with this particular set of symbols,
-that is not the case! As a natural consequence of this, you have to type
-more, not less, when you manually input data using this base 256
-instead of base 16 or some other compact representation.
+than data encoded in [base 16](https://en.wikipedia.org/wiki/Hexadecimal)
+or [base 64](https://en.wikipedia.org/wiki/Base64), but with this particular
+set of symbols, that is not the case! As a natural consequence of this,
+you have to type more, not less, when you manually input data
+using this base 256 instead of base 16 or some other compact representation.
 
 So, why this base 256 encoding?
 
-Manually typing out base 64 is painful, and base 16 makes it
-easy to lose track of where you are while typing. `lastresort` attempts
-to remedy both of these problems by using human words.
+Manually typing out base 64 is painful. Same goes for base 16.
+Both of these (base 64 and base 16), and particularly base 16,
+are prone to make you lose track of where you are
+while reading and typing or speaking.
 
-The purpose of `lastresort` is to make manual input of binary data
-onto a computer less error-prone compared to typing in the
-[base 16](https://en.wikipedia.org/wiki/Hexadecimal) or
-[base 64](https://en.wikipedia.org/wiki/Base64) encoding of said data.
-
-Likewise, because this base 256 encoding consists of human words,
-it could also lend itself better to input by spoken voice than base 16
-or base 64 would.
+`lastresort` aims to make manual input of binary data onto a computer
+by either keyboard or voice input less error-prone compared to
+typing in the base 16 or base 64 encoding of said data.
 
 Here is a quick example:
 
@@ -36,27 +33,35 @@ might look like:
 
 In other words, this file contains three bytes `0x05 0x05 0x05`.
 
-That's not so bad, and it's quick and easy to type even in hex.
-
-But when the amount of data gets bigger, it gets more and more tricky
-to manually type in the bytes by hand.
-
-When might you want to type in the bytes of a file by hand anyways?
-
-Sample use-cases include typing in your SSH private key on a computer
-that is running a live USB stick copy of its OS without persistent
-storage, and which doesn't have a useable webcamera leaving you
-unable to enter the data using a QR-code.
-
-Anyways, to continue with the example from above of the three bytes.
-
 In base64 this is:
 
 ```text
 BQUF
 ```
 
-In `lastresort` base 256 using the default codec PGP Word List, it is:
+That's not so bad, and it's quick and easy to type or to read out loud
+in either base 16 or base 64 encoding.
+
+But when the amount of data increases, it becomes more and more tricky
+to manually type in the bytes by hand or to read them out loud in base 16
+or in base 64.
+
+When might you want to type in the bytes of a file by hand, or to read
+them out loud anyways?
+
+Sample use-cases include:
+
+- typing in your SSH private key on a computer that is running a
+  live USB stick copy of its OS without persistent storage,
+  and which doesn't have a usable webcam leaving you
+  unable to enter the data using a QR-code.
+- relaying the contents of binary files to another person
+  over a voice channel.
+
+Anyways, to continue with the example from above of the three bytes.
+
+In `lastresort` base 256 using the default codec PGP Word List, the bytes
+from the example above are represented as:
 
 ```text
 adult amulet adult
