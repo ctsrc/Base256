@@ -133,7 +133,7 @@ In `lastresort`, 256 of the words from this list are used when using this codec.
 
 ## Example input and outputs using the different codecs
 
-In the `sample_data/inputs` directory of this repository,
+In the `sample_data/original` directory of this repository,
 we have a file named `id_ed25519` containing the following
 OpenSSH ed25519 private key:
 
@@ -156,7 +156,7 @@ If we run `lastresort` with the above private key `id_ed25519`
 as input, and we use the PGP Word List codec:
 
 ```zsh
-cargo run -- -i sample_data/inputs/id_ed25519 | fold -w 78 -s
+cargo run -- -i sample_data/original/id_ed25519 | fold -w 78 -s
 ```
 
 We get the following base 256 encoded output:
@@ -219,7 +219,7 @@ If we run `lastresort` with the above private key `id_ed25519`
 as input, and we use the EFF Short Wordlist 2.0 codec:
 
 ```zsh
-cargo run -- -c eff -i sample_data/inputs/id_ed25519 | fold -w 78 -s
+cargo run -- -c eff -i sample_data/original/id_ed25519 | fold -w 78 -s
 ```
 
 We get the following base 256 encoded output:
