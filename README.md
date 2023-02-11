@@ -132,8 +132,8 @@ In `lastresort`, 256 of the words from this list are used when using this codec.
 
 ## Example input and outputs using the different codecs
 
-In the `sample_data` directory of this repository, we have
-a file named `id_ed25519` containing the following
+In the `sample_data/inputs` directory of this repository,
+we have a file named `id_ed25519` containing the following
 OpenSSH ed25519 private key:
 
 ```text
