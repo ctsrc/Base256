@@ -19,7 +19,7 @@ use std::io;
 use std::io::{stdin, stdout, BufReader, BufWriter, Read};
 
 use anyhow::Result;
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 
 // https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
 include!(concat!(env!("OUT_DIR"), "/256.rs"));
@@ -27,6 +27,9 @@ include!(concat!(env!("OUT_DIR"), "/256.rs"));
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, name = "lastresort")]
 struct Cli {
+    /// Codec to use
+    #[arg(short, long, value_enum, default_value_t=Codec::Pgp)]
+    codec: Codec,
     /// Decode data (default action is to encode data).
     #[arg(short, long)]
     decode: bool,
@@ -36,6 +39,14 @@ struct Cli {
     /// Write output to OUTPUT_FILE. Default is stdout; passing - also represents stdout
     #[arg(short, long, value_name = "OUTPUT_FILE")]
     output: Option<String>,
+}
+
+#[derive(ValueEnum, Clone)]
+enum Codec {
+    /// PGP Word List. The default codec
+    Pgp,
+    /// EFF Short Wordlist 2.0. The legacy codec
+    Eff,
 }
 
 fn main() -> Result<()> {
@@ -68,8 +79,23 @@ fn main() -> Result<()> {
     if cli.decode {
         unimplemented!();
     } else {
-        for byte in input_bytes {
-            write!(output, "{} ", WL_AUTOCOMPLETE[byte? as usize])?
+        match cli.codec {
+            Codec::Pgp => {
+                let mut odd_even = 0;
+                for byte in input_bytes {
+                    if odd_even == 0 {
+                        write!(output, "{} ", WL_PGPFONE_TWO_SYLLABLE[byte? as usize])?
+                    } else {
+                        write!(output, "{} ", WL_PGPFONE_THREE_SYLLABLE[byte? as usize])?
+                    }
+                    odd_even = (odd_even + 1) % 2;
+                }
+            }
+            Codec::Eff => {
+                for byte in input_bytes {
+                    write!(output, "{} ", WL_AUTOCOMPLETE[byte? as usize])?
+                }
+            }
         }
     }
 

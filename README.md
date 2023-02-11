@@ -28,7 +28,39 @@ unable to enter the data using a QR-code.
 
 `lastresort` supports the following codecs:
 
+- PGP Word List, the default codec
 - EFF Short Wordlist 2.0, the legacy codec
+
+### PGP Word List
+
+> The PGP Word List ("Pretty Good Privacy word list", also called
+> a biometric word list [...]) is a list of words for conveying data bytes
+> in a clear unambiguous way via a voice channel. They are analogous
+> in purpose to the NATO phonetic alphabet used by pilots,
+> except a longer list of words is used, each word corresponding
+> to one of the 256 distinct numeric byte values.
+>
+> [...]
+>
+> The list is actually composed of two lists, each containing
+> 256 phonetically distinct words, in which each word represents
+> a different byte value between 0 and 255. Two lists are used
+> because reading aloud long random sequences of human words
+> usually risks three kinds of errors:
+> 1) transposition of two consecutive words,
+> 2) duplicate words, or
+> 3) omitted words.
+>
+> To detect all three kinds of errors, the two lists are used alternately
+> for the even-offset bytes and the odd-offset bytes in the byte sequence.
+> Each byte value is actually represented by two different words,
+> depending on whether that byte appears at an even or an odd offset
+> from the beginning of the byte sequence. The two lists are
+> readily distinguished by the number of syllables;
+> the even list has words of two syllables, the odd list has three.
+> The two lists have a maximum word length of 9 and 11 letters, respectively.
+
+https://en.wikipedia.org/wiki/PGP_word_list
 
 ### EFF Short Wordlist 2.0
 
@@ -68,13 +100,74 @@ p0r3nHUmj+QkHx6zg7YdAAAAEGVyaWtuQGxpYmVyYXRpb24BAgMEBQ==
 The corresponding base 256 encoded outputs using each of the different
 codecs available in `lastresort` are shown is the subsections below.
 
+### Example output using the PGP Word List codec
+
+If we run `lastresort` with the above private key `id_ed25519`
+as input, and we use the PGP Word List codec:
+
+```zsh
+cargo run -- -i sample_data/inputs/id_ed25519
+```
+
+We get the following base 256 encoded output:
+
+```text
+button commando button commando button detergent crusade disable dogsled
+enchanting bison enrollment drumbeat dinosaur drifter escapade dwelling
+disbelief bison enterprise Dupont disruptive egghead detector eating dinosaur
+bison divisive crusade fascinate button commando button commando button
+armistice flagpole congregate crowfoot hemisphere flagpole hideaway drifter
+insincere fallout determine chatter impartial enlist exodus Geiger inception
+flytrap hazardous crusade detector cranky detector cranky detector crowfoot
+disable chopper inertia flagpole hesitate edict detector cranky detector cranky
+dinosaur flagpole hesitate classroom indigo enlist equation cranky detector
+cranky detector cranky detector cranky detector cranky detergent cranky detector
+cranky detector dreadful infancy cranky detector cranky detector highchair
+insincere flatfoot conformist framework inception enlist existence allow
+equation inverse enchanting eating everyday indulge enrollment drunken detector
+cranky detector crucial determine flytrap dinosaur chopper filament eating
+conformist cubic informant cranky hydraulic dropper component chopper graduate
+fragile embezzle dosage disbelief enlist conformist drainage impetus dragnet
+graduate dragnet crossover chopper inferno chatter distortion goggles component
+Geiger distortion crowfoot councilman fracture impetus choking enrollment
+checkup disbelief drunken detector cranky detector dosage handiwork inverse
+coherence egghead corporate Christmas impetus hotdog hemisphere fracture
+armistice hockey hamburger cranky detector cranky detector highchair insincere
+flatfoot conformist framework inception enlist existence drunken informant
+drifter Eskimo edict inferno dropper equation cranky detector cranky determine
+crucial graduate crusade consulting enlist Eskimo checkup direction inverse
+detector gremlin enrollment cement consulting flytrap guitarist dreadful
+distortion deckhand filament checkup document hamlet divisive flytrap divisive
+classroom consulting indulge confidence dosage holiness cement headwaters
+dosage detergent classic gravity hamlet consensus dropper conformist deckhand
+equation allow detector cranky detector crusade detector cranky impartial
+chairlift enrollment hockey coherence goggles graduate classroom distortion
+glucose gossamer briefcase hydraulic flagpole concurrent egghead Eskimo gremlin
+consensus involve inception chisel hamburger cubic corporate chairlift
+coherence chairlift disruptive eating equipment Glasgow document chisel
+disbelief inverse glossary gremlin disable drainage disable chopper concurrent
+eating hemisphere Glasgow enterprise endow exodus dogsled determine goggles
+corrosion cement hemisphere chatter councilman indoors headwaters flytrap
+hideaway endow indigo indoors armistice goldfish concurrent guidance congregate
+glucose disbelief edict hesitate gazelle coherence drunken headwaters deckhand
+inferno Christmas insincere framework corrosion endow graduate cranky detector
+cranky detector crusade disable egghead informant fallout existence highchair
+indigo drunken disable indulge hurricane endow hesitate egghead informant endow
+exodus Dupont hurricane flagpole conformist choking detergent cranky hamburger
+dreadful dinosaur crowfoot equation commence decadence allow commando button
+commando button commando crusade enchanting crumpled cannonball dropper
+enterprise crusade enchanting dwelling escapade deckhand cannonball drumbeat
+equipment dogsled examine cranky Eskimo crusade cannonball dragnet dinosaur
+endow commando button commando button commando allow
+```
+
 ### Example output using the EFF Short Wordlist 2.0 codec
 
 If we run `lastresort` with the above private key `id_ed25519`
 as input, and we use the EFF Short Wordlist 2.0 codec:
 
 ```zsh
-cargo run -- < sample_data/inputs/id_ed25519
+cargo run -- -c eff -i sample_data/inputs/id_ed25519
 ```
 
 We get the following base 256 encoded output:
@@ -146,6 +239,9 @@ With no options, `lastresort` reads raw data from stdin
 and writes encoded data as a continuous block to stdout.
 
 ### Options
+
+`-c`, `--codec` `<CODEC>` Codec to use. Default: `pgp`.
+Possible values: `pgp`, `eff`.
 
 `-d`, `--decode` Decode data (default action is to encode data).
 

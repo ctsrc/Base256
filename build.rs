@@ -1,5 +1,5 @@
 use std::env;
-use std::fs::File;
+use std::fs::{read_to_string, File};
 use std::io::{BufRead, BufReader, Write};
 use std::path::Path;
 
@@ -13,7 +13,6 @@ fn main() {
     f_dest
         .write_all(b"const WL_AUTOCOMPLETE: &'static [&'static str] = &[")
         .unwrap();
-
     let f_src = BufReader::new(File::open("eff_short_wordlist_2_0.txt").unwrap());
     for (i, line) in f_src.lines().take(1024).enumerate() {
         if i % 4 == 0 {
@@ -26,6 +25,23 @@ fn main() {
             f_dest.write_all(b"\",").unwrap();
         }
     }
+    f_dest.write_all(b"];\n").unwrap();
 
-    f_dest.write_all(b"];").unwrap();
+    f_dest
+        .write_all(b"const WL_PGPFONE_THREE_SYLLABLE: &'static [&'static str] = &[")
+        .unwrap();
+    let words = read_to_string("pgpfone_three_syllable_word_list.txt").unwrap();
+    for word in words.split(' ') {
+        write!(f_dest, "\"{}\",", word).unwrap();
+    }
+    f_dest.write_all(b"];\n").unwrap();
+
+    f_dest
+        .write_all(b"const WL_PGPFONE_TWO_SYLLABLE: &'static [&'static str] = &[")
+        .unwrap();
+    let words = read_to_string("pgpfone_two_syllable_word_list.txt").unwrap();
+    for word in words.split(' ') {
+        write!(f_dest, "\"{}\",", word).unwrap();
+    }
+    f_dest.write_all(b"];\n").unwrap();
 }
