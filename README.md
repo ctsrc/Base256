@@ -19,7 +19,7 @@ to remedy both of these problems by using human words.
 
 Here is a quick example:
 
-Imagine a file with three bytes in it. In hexadecimal this file
+Imagine a file with three bytes in it. A hexadecimal dump of this file
 might look like:
 
 ```text
