@@ -137,18 +137,25 @@ alchemy
 ## Usage
 
 ```
-lastresort [-d | --decode]
+lastresort [-d | --decode] [-i <INPUT_FILE>] [-o <OUTPUT_FILE>]
 lastresort -h | --help
 lastresort -V | --version
 ```
 
-Reads from `stdin` and writes to `stdout`.
+With no options, `lastresort` reads raw data from stdin
+and writes encoded data as a continuous block to stdout.
 
 ### Options
 
 `-d`, `--decode` Decode data (default action is to encode data).
 
-`-h`, `--help` Show help and exit.
+`-i`, `--input` `<INPUT_FILE>` Read input from `INPUT_FILE`.
+Default is stdin; passing `-` also represents stdin.
+
+`-o`, `--output` `<OUTPUT_FILE>` Write output to `OUTPUT_FILE`.
+Default is stdout; passing `-` also represents stdout.
+
+`-h`, `--help` Print usage summary and exit.
 
 `-V`, `--version` Print version information and exit.
 

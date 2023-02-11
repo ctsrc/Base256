@@ -14,10 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-use std::fs::File;
+use std::fs::{File, OpenOptions};
 use std::io;
-use std::io::{stdin, BufReader, Read};
-use std::path::PathBuf;
+use std::io::{stdin, stdout, BufReader, BufWriter, Read};
 
 use anyhow::Result;
 use clap::Parser;
@@ -34,6 +33,9 @@ struct Cli {
     /// Read input from INPUT_FILE. Default is stdin; passing - also represents stdin
     #[arg(short, long, value_name = "INPUT_FILE")]
     input: Option<String>,
+    /// Write output to OUTPUT_FILE. Default is stdout; passing - also represents stdout
+    #[arg(short, long, value_name = "OUTPUT_FILE")]
+    output: Option<String>,
 }
 
 fn main() -> Result<()> {
@@ -51,11 +53,23 @@ fn main() -> Result<()> {
     };
     let input_bytes = input.bytes();
 
+    let mut output: Box<dyn io::Write> = match cli.output {
+        None => Box::new(stdout()),
+        Some(path) => {
+            if path == "-" {
+                Box::new(stdout())
+            } else {
+                let file = OpenOptions::new().create(true).write(true).open(path)?;
+                Box::new(BufWriter::new(file))
+            }
+        }
+    };
+
     if cli.decode {
         unimplemented!();
     } else {
         for byte in input_bytes {
-            print!("{} ", WL_AUTOCOMPLETE[byte? as usize])
+            write!(output, "{} ", WL_AUTOCOMPLETE[byte? as usize])?
         }
     }
 
