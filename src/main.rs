@@ -14,9 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-use std::io::stdin;
-use std::io::Read;
+use std::fs::File;
+use std::io;
+use std::io::{stdin, BufReader, Read};
+use std::path::PathBuf;
 
+use anyhow::Result;
 use clap::Parser;
 
 // https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
@@ -28,19 +31,33 @@ struct Cli {
     /// Decode data (default action is to encode data).
     #[arg(short, long)]
     decode: bool,
+    /// Read input from INPUT_FILE. Default is stdin; passing - also represents stdin
+    #[arg(short, long, value_name = "INPUT_FILE")]
+    input: Option<String>,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let cli = Cli::parse();
+
+    let input: Box<dyn io::Read> = match cli.input {
+        None => Box::new(stdin()),
+        Some(path) => {
+            if path == "-" {
+                Box::new(stdin())
+            } else {
+                Box::new(BufReader::new(File::open(path)?))
+            }
+        }
+    };
+    let input_bytes = input.bytes();
 
     if cli.decode {
         unimplemented!();
     } else {
-        for byte in stdin().bytes() {
-            match byte {
-                Ok(x) => print!("{} ", WL_AUTOCOMPLETE[x as usize]),
-                _ => break,
-            }
+        for byte in input_bytes {
+            print!("{} ", WL_AUTOCOMPLETE[byte? as usize])
         }
     }
+
+    Ok(())
 }
