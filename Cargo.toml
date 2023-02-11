@@ -9,10 +9,11 @@ version = "0.2.0"
 authors = ["Erik Nordstrøm <erik@nordstroem.no>"]
 homepage = "https://ctsrc.github.io/Base256"
 categories = ["command-line-utilities"]
+edition = "2021"
 
 [[bin]]
 name = "lastresort"
 path = "src/main.rs"
 
 [dependencies]
-clap = {version = "~2.29.1", features = ["yaml"]}
+clap = { version = "4.1", default-features = false, features = ["std", "derive", "help", "usage"] }

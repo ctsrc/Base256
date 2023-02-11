@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Erik Nordstrøm <erik@nordstroem.no>
+ * Copyright (c) 2018, 2023 Erik Nordstrøm <erik@nordstroem.no>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,21 +17,24 @@
 use std::io::stdin;
 use std::io::Read;
 
-#[macro_use]
-extern crate clap;
-use clap::App;
+use clap::Parser;
 
 // https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
 include!(concat!(env!("OUT_DIR"), "/256.rs"));
 
+#[derive(Parser)]
+#[command(author, version, about, long_about = None, name = "lastresort")]
+struct Cli {
+    /// Decode data (default action is to encode data).
+    #[arg(short, long)]
+    decode: bool,
+}
+
 fn main ()
 {
-    let yaml = load_yaml!("cli.yaml");
-    let args = App::from_yaml(yaml).get_matches();
+    let cli = Cli::parse();
 
-    let opt_action_decode = args.is_present("action_decode");
-
-    if opt_action_decode
+    if cli.decode
     {
         unimplemented!();
     }
