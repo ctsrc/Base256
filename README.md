@@ -9,7 +9,8 @@ than data encoded in [base 16](https://en.wikipedia.org/wiki/Hexadecimal)
 or [base 64](https://en.wikipedia.org/wiki/Base64), but with this particular
 set of symbols, that is not the case! As a natural consequence of this,
 you have to type more, not less, when you manually input data
-using this base 256 instead of base 16 or some other compact representation.
+using this base 256 encoding instead of base 16 or some other
+compact representation.
 
 So, why this base 256 encoding?
 
