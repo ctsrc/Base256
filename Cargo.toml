@@ -21,3 +21,6 @@ path = "src/main.rs"
 [dependencies]
 anyhow = { version = "1.0", default-features = false, features = ["std"] }
 clap = { version = "4.1", default-features = false, features = ["std", "derive", "help", "usage"] }
+
+[dev-dependencies]
+test-case = "2.2"

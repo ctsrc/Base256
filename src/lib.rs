@@ -18,11 +18,11 @@
 include!(concat!(env!("OUT_DIR"), "/256.rs"));
 
 #[cfg(test)]
-mod tests {
+mod tests_word_lists_sorted_extent {
     use super::*;
 
     #[test]
-    /// The EFF Short Wordlist 2.0 is sorted.
+    /// The autocomplete wordlist based on the EFF Short Wordlist 2.0 is sorted.
     fn test_wl_autocomplete_is_sorted() {
         assert!(WL_AUTOCOMPLETE.windows(2).all(|w| w[0] <= w[1]));
     }
@@ -48,5 +48,18 @@ mod tests {
         assert!(WL_PGPFONE_TWO_SYLLABLE
             .windows(2)
             .all(|w| w[0].to_lowercase() <= w[1].to_lowercase()));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use test_case::test_case;
+
+    #[test_case(WL_AUTOCOMPLETE ; "autocomplete word list contains 256 words")]
+    #[test_case(WL_PGPFONE_THREE_SYLLABLE ; "three-syllable word list contains 256 words")]
+    #[test_case(WL_PGPFONE_TWO_SYLLABLE ; "two-syllable word list contains 256 words")]
+    fn wl_contains_256_words(wl: &[&str]) {
+        assert_eq!(wl.len(), 256);
     }
 }
