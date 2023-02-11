@@ -7,7 +7,8 @@
 You might expect data encoded in base 256 to be more space efficient
 than data encoded in base 16, but with this particular set of symbols,
 that is not the case! As a natural consequence of this, you have to type
-more, not less, than you would if you use this base 256 instead of base 16.
+more, not less, when you manually input data using this base 256
+instead of base 16 or some other compact representation.
 
 So, why this base 256 encoding?
 
