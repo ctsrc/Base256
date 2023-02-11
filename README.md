@@ -12,7 +12,8 @@ you would if you use this base 256 instead of base 16.
 So, why this base 256 encoding?
 
 The purpose of `lastresort` is to make manual input of binary data
-onto a computer less error-prone compared to typing in the base 16 or
+onto a computer less error-prone compared to typing in the
+[base 16](https://en.wikipedia.org/wiki/Hexadecimal) or
 [base 64](https://en.wikipedia.org/wiki/Base64) encoding of said data.
 
 Manually typing out base 64 is painful, and base 16 makes it
