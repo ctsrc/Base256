@@ -1,6 +1,6 @@
 [package]
 name = "base256"
-description = "Encode and decode data in base 256"
+description = "Encode and decode data in base 256 easily typed words"
 license = "ISC"
 documentation = "https://github.com/ctsrc/Base256/blob/master/README.md"
 readme = "README.md"
