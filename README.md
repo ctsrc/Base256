@@ -7,7 +7,9 @@
 You might expect data encoded in base 256 to be more space efficient
 than data encoded in base 16, but with this particular set of symbols,
 that is not the case! Likewise, you have to type more, not less, than
-you would if you use this base 256 instead of base 16. So why?
+you would if you use this base 256 instead of base 16.
+
+So, why this base 256 encoding?
 
 The purpose of `lastresort` is to make manual input of binary data
 onto a computer less error-prone compared to typing in the base 16 or
@@ -31,7 +33,9 @@ In other words, this file contains three bytes `0x05 0x05 0x05`.
 That's not so bad, and it's quick and easy to type even in hex.
 
 But when the amount of data gets bigger, it gets more and more tricky
-to manually type in the bytes by hand. When might you want to do so?
+to manually type in the bytes by hand.
+
+When might you want to type in the bytes of a file by hand anyways?
 
 Sample use-cases include typing in your SSH private key on a computer
 that is running a live USB stick copy of its OS without persistent
