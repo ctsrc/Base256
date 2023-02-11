@@ -1,5 +1,9 @@
 # `lastresort`(1) – Encode and decode data in base 256
 
+[![Crates.io](https://img.shields.io/crates/v/base256?style=flat-square)](https://crates.io/crates/base256)
+[![Crates.io](https://img.shields.io/crates/d/base256?style=flat-square)](https://crates.io/crates/base256)
+[![License](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](LICENSE)
+
 Command-line utility for encoding and decoding arbitrary binary data
 to and from easily typed words.
 
