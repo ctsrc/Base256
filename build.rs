@@ -11,7 +11,7 @@ fn main() {
     let mut f_dest = File::create(&dest_path).unwrap();
 
     f_dest
-        .write_all(b"const WL_AUTOCOMPLETE: &'static [&'static str] = &[")
+        .write_all(b"pub const WL_AUTOCOMPLETE: &'static [&'static str] = &[")
         .unwrap();
     let f_src = BufReader::new(File::open("eff_short_wordlist_2_0.txt").unwrap());
     for (i, line) in f_src.lines().take(1024).enumerate() {
@@ -28,7 +28,7 @@ fn main() {
     f_dest.write_all(b"];\n").unwrap();
 
     f_dest
-        .write_all(b"const WL_PGPFONE_THREE_SYLLABLE: &'static [&'static str] = &[")
+        .write_all(b"pub const WL_PGPFONE_THREE_SYLLABLE: &'static [&'static str] = &[")
         .unwrap();
     let words = read_to_string("pgpfone_three_syllable_word_list.txt").unwrap();
     for word in words.split(' ') {
@@ -37,7 +37,7 @@ fn main() {
     f_dest.write_all(b"];\n").unwrap();
 
     f_dest
-        .write_all(b"const WL_PGPFONE_TWO_SYLLABLE: &'static [&'static str] = &[")
+        .write_all(b"pub const WL_PGPFONE_TWO_SYLLABLE: &'static [&'static str] = &[")
         .unwrap();
     let words = read_to_string("pgpfone_two_syllable_word_list.txt").unwrap();
     for word in words.split(' ') {

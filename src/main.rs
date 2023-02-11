@@ -21,9 +21,6 @@ use std::io::{stdin, stdout, BufReader, BufWriter, Read};
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
 
-// https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
-include!(concat!(env!("OUT_DIR"), "/256.rs"));
-
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, name = "lastresort")]
 struct Cli {
@@ -84,16 +81,24 @@ fn main() -> Result<()> {
                 let mut odd_even = 0;
                 for byte in input_bytes {
                     if odd_even == 0 {
-                        write!(output, "{} ", WL_PGPFONE_TWO_SYLLABLE[byte? as usize])?
+                        write!(
+                            output,
+                            "{} ",
+                            base256::WL_PGPFONE_TWO_SYLLABLE[byte? as usize]
+                        )?
                     } else {
-                        write!(output, "{} ", WL_PGPFONE_THREE_SYLLABLE[byte? as usize])?
+                        write!(
+                            output,
+                            "{} ",
+                            base256::WL_PGPFONE_THREE_SYLLABLE[byte? as usize]
+                        )?
                     }
                     odd_even = (odd_even + 1) % 2;
                 }
             }
             Codec::Eff => {
                 for byte in input_bytes {
-                    write!(output, "{} ", WL_AUTOCOMPLETE[byte? as usize])?
+                    write!(output, "{} ", base256::WL_AUTOCOMPLETE[byte? as usize])?
                 }
             }
         }

@@ -11,6 +11,9 @@ homepage = "https://ctsrc.github.io/Base256"
 categories = ["command-line-utilities"]
 edition = "2021"
 
+[lib]
+path = "src/lib.rs"
+
 [[bin]]
 name = "lastresort"
 path = "src/main.rs"
