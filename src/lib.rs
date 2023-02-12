@@ -14,6 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+mod codec;
+
+pub use codec::*;
+
 // https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
 include!(concat!(env!("OUT_DIR"), "/256.rs"));
 
@@ -52,7 +56,7 @@ mod tests_word_lists_sorted_extent {
 }
 
 #[cfg(test)]
-mod tests {
+mod test_cases_word_lists {
     use super::*;
     use test_case::test_case;
 

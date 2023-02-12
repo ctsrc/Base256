@@ -21,6 +21,8 @@ use std::io::{stdin, stdout, BufReader, BufWriter, Read};
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
 
+use base256::Encode;
+
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, name = "lastresort")]
 struct Cli {
@@ -97,8 +99,8 @@ fn main() -> Result<()> {
                 }
             }
             Codec::Eff => {
-                for byte in input_bytes {
-                    write!(output, "{} ", base256::WL_AUTOCOMPLETE[byte? as usize])?
+                for word in input_bytes.encode() {
+                    write!(output, "{} ", word?)?
                 }
             }
         }
