@@ -156,7 +156,7 @@ If we run `lastresort` with the above private key `id_ed25519`
 as input, and we use the PGP Word List codec:
 
 ```zsh
-cargo run -- -i sample_data/original/id_ed25519 | fold -w 78 -s
+cargo run -- -c pgp -i sample_data/original/id_ed25519 | fold -w 78 -s
 ```
 
 We get the following base 256 encoded output:

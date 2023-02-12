@@ -18,10 +18,12 @@ mod eff;
 
 pub use eff::*;
 
+#[cfg(feature = "encode")]
 pub trait Encode<I: Iterator, C> {
     fn encode(self) -> C;
 }
 
+#[cfg(feature = "encode")]
 #[cfg(test)]
 mod test_cases_encode {
     use super::*;

@@ -11,16 +11,25 @@ homepage = "https://ctsrc.github.io/Base256"
 categories = ["command-line-utilities"]
 edition = "2021"
 
+[features]
+default = ["bin", "encode", "decode", "codec_pgp", "codec_eff"]
+bin = ["dep:clap", "dep:anyhow"]
+encode = []
+decode = []
+codec_pgp = []
+codec_eff = []
+
 [lib]
 path = "src/lib.rs"
 
 [[bin]]
 name = "lastresort"
 path = "src/main.rs"
+required-features = ["bin"]
 
 [dependencies]
-anyhow = { version = "1.0", default-features = false, features = ["std"] }
-clap = { version = "4.1", default-features = false, features = ["std", "derive", "help", "usage"] }
+anyhow = { version = "1.0", default-features = false, features = ["std"], optional = true }
+clap = { version = "4.1", default-features = false, features = ["std", "derive", "help", "usage", "error-context"], optional = true }
 
 [dev-dependencies]
 test-case = "2.2"
