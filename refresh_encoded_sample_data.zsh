@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+set -euxo pipefail
+
 cargo build --release
 
 ./target/release/lastresort -i sample_data/original/id_ed25519 | fold -w 78 -s > sample_data/encoded/pgp/id_ed25519-fold_w_78_s.txt
