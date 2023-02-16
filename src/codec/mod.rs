@@ -33,8 +33,8 @@ mod test_cases_encode {
     use test_case::test_case;
 
     #[cfg(feature = "codec_eff")]
-    #[test_case(&[0x05u8; 3], &["acuteness"; 3] ; "eff encoder 0x05 0x05 0x05")]
-    fn test_encoder(bytes: &[u8], expected_result: &[&str]) {
+    #[test_case(&[0x05u8; 3], &["acuteness"; 3] ; "data 0x05 0x05 0x05")]
+    fn test_eff_encoder(bytes: &[u8], expected_result: &[&str]) {
         let bytes = Cursor::new(bytes).bytes();
         let encoded = bytes
             .into_iter()
