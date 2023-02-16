@@ -14,8 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#[cfg(feature = "codec_eff")]
 mod eff;
 
+#[cfg(feature = "codec_eff")]
 pub use eff::*;
 
 #[cfg(feature = "encode")]
@@ -30,6 +32,7 @@ mod test_cases_encode {
     use std::io::{Cursor, Read};
     use test_case::test_case;
 
+    #[cfg(feature = "codec_eff")]
     #[test_case(&[0x05u8; 3], &["acuteness"; 3] ; "eff encoder 0x05 0x05 0x05")]
     fn test_encoder(bytes: &[u8], expected_result: &[&str]) {
         let bytes = Cursor::new(bytes).bytes();
