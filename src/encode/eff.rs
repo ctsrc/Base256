@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Erik Nordstrøm <erik@nordstroem.no>
+ * Copyright (c) 2018, 2023 Erik Nordstrøm <erik@nordstroem.no>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,25 +14,37 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#[cfg(feature = "codec_eff")]
-mod eff;
-
-#[cfg(feature = "codec_eff")]
-pub use eff::*;
-
-#[cfg(feature = "encode")]
-pub trait Encode<I: Iterator, C> {
-    fn encode(self) -> C;
+#[derive(Clone, Debug)]
+pub struct EffCodecEncode<I: Iterator> {
+    iter: I,
 }
 
-#[cfg(feature = "encode")]
+impl<I, E> Iterator for EffCodecEncode<I>
+where
+    I: Iterator<Item = Result<u8, E>>,
+{
+    type Item = Result<&'static str, E>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.iter.next()? {
+            Ok(byte) => Some(Ok(crate::WL_AUTOCOMPLETE[byte as usize])),
+            Err(e) => Some(Err(e)),
+        }
+    }
+}
+
+impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, EffCodecEncode<I>> for I {
+    fn encode(self) -> EffCodecEncode<I> {
+        EffCodecEncode { iter: self }
+    }
+}
+
 #[cfg(test)]
 mod test_cases_encode {
-    use super::*;
+    use super::super::*;
     use std::io::{Cursor, Read};
     use test_case::test_case;
 
-    #[cfg(feature = "codec_eff")]
     #[test_case(&[0x05u8; 3], &["acuteness"; 3] ; "data 0x05 0x05 0x05")]
     fn test_eff_encoder(bytes: &[u8], expected_result: &[&str]) {
         let bytes = Cursor::new(bytes).bytes();

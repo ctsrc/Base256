@@ -150,13 +150,13 @@ p0r3nHUmj+QkHx6zg7YdAAAAEGVyaWtuQGxpYmVyYXRpb24BAgMEBQ==
 The corresponding base 256 encoded outputs using each of the different
 codecs available in `lastresort` are shown is the subsections below.
 
-### Example output using the PGP Word List codec
+### Example output using the PGP Word List encoder
 
 If we run `lastresort` with the above private key `id_ed25519`
 as input, and we use the PGP Word List codec:
 
 ```zsh
-cargo run -- -c pgp -i sample_data/original/id_ed25519 | fold -w 78 -s
+cargo run -- -e pgp -i sample_data/original/id_ed25519 | fold -w 78 -s
 ```
 
 We get the following base 256 encoded output:
@@ -213,13 +213,13 @@ examine cranky Eskimo crusade cannonball dragnet dinosaur endow commando
 button commando button commando allow 
 ```
 
-### Example output using the EFF Short Wordlist 2.0 codec
+### Example output using the EFF Short Wordlist 2.0 encoder
 
 If we run `lastresort` with the above private key `id_ed25519`
 as input, and we use the EFF Short Wordlist 2.0 codec:
 
 ```zsh
-cargo run -- -c eff -i sample_data/original/id_ed25519 | fold -w 78 -s
+cargo run -- -e eff -i sample_data/original/id_ed25519 | fold -w 78 -s
 ```
 
 We get the following base 256 encoded output:
@@ -287,10 +287,13 @@ and writes encoded data as a continuous block to stdout.
 
 ### Options
 
-`-c`, `--codec` `<CODEC>` Codec to use. Default: `pgp`.
-Possible values: `pgp`, `eff`.
+`-d`, `--decode` `[<DECODER>]` Decode data (default action is to encode data).
+Default: `pgp`. Possible values: `pgp`, `eff`.
 
-`-d`, `--decode` Decode data (default action is to encode data).
+`-e`, `--encoder` `<ENCODER>` Encoder to use.
+Possible values: `pgp`, `eff`.
+If encoder is not specified, the `pgp` encoder will be used.
+Conflicts with option `-d`.
 
 `-i`, `--input` `<INPUT_FILE>` Read input from `INPUT_FILE`.
 Default is stdin; passing `-` also represents stdin.

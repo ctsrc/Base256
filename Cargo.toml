@@ -12,12 +12,16 @@ categories = ["command-line-utilities"]
 edition = "2021"
 
 [features]
-default = ["bin", "encode", "decode", "codec_pgp", "codec_eff"]
+default = ["bin", "encode_pgp", "decode_pgp", "encode_eff", "decode_eff"]
 bin = ["dep:clap", "dep:anyhow"]
 encode = []
 decode = []
-codec_pgp = []
-codec_eff = []
+encode_pgp = ["wl_pgp", "encode"]
+decode_pgp = ["wl_pgp", "decode"]
+encode_eff = ["wl_eff", "encode"]
+decode_eff = ["wl_eff", "decode"]
+wl_eff = []
+wl_pgp = []
 
 [lib]
 path = "src/lib.rs"

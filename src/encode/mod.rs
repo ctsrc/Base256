@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023 Erik Nordstrøm <erik@nordstroem.no>
+ * Copyright (c) 2023 Erik Nordstrøm <erik@nordstroem.no>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,27 +14,13 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#[derive(Clone, Debug)]
-pub struct EffCodecEncode<I: Iterator> {
-    iter: I,
-}
+#[cfg(feature = "encode_eff")]
+mod eff;
 
-impl<I, E> Iterator for EffCodecEncode<I>
-where
-    I: Iterator<Item = Result<u8, E>>,
-{
-    type Item = Result<&'static str, E>;
+#[cfg(feature = "encode_eff")]
+pub use eff::*;
 
-    fn next(&mut self) -> Option<Self::Item> {
-        match self.iter.next()? {
-            Ok(byte) => Some(Ok(crate::WL_AUTOCOMPLETE[byte as usize])),
-            Err(e) => Some(Err(e)),
-        }
-    }
-}
-
-impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, EffCodecEncode<I>> for I {
-    fn encode(self) -> EffCodecEncode<I> {
-        EffCodecEncode { iter: self }
-    }
+#[cfg(feature = "encode")]
+pub trait Encode<I: Iterator, C> {
+    fn encode(self) -> C;
 }
