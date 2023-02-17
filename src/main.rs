@@ -23,7 +23,7 @@ use std::io::{stdin, stdout, BufReader, BufWriter, Read, Write};
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
 
-#[cfg(feature = "encode")]
+#[cfg(any(feature = "encode_pgp", feature = "encode_eff"))]
 use base256::Encode;
 
 #[derive(Parser)]
@@ -178,22 +178,24 @@ fn main() -> Result<()> {
         }
     }
 
-    #[cfg(feature = "encode")]
-    {
-        #[cfg(not(any(feature = "encode_pgp", feature = "encode_eff")))]
-        compile_error!("Building bin target with encoding feature enabled requires that at least one encoder is enabled");
+    #[cfg(not(any(feature = "encode_pgp", feature = "encode_eff")))]
+    compile_error!("Building bin target with encoding feature enabled requires that at least one encoder is enabled");
 
+    #[cfg(any(feature = "encode_pgp", feature = "encode_eff"))]
+    {
         // If support for the PGP encoder was compiled, then it is the default encoder..
         #[cfg(feature = "encode_pgp")]
         let encoder = cli.encoder.unwrap_or(Encoder::Pgp);
         // ..otherwise, the encoder has to be provided as a cli arg.
-        #[cfg(not(feature = "encode_pgp"))]
+        #[cfg(all(feature = "decode", not(feature = "encode_pgp")))]
         let encoder = match cli.encoder {
             Some(encoder) => encoder,
             None => {
                 unreachable!("This match arm should never be reached due to clap parse rules.");
             }
         };
+        #[cfg(not(any(feature = "decode", feature = "encode_pgp")))]
+        let encoder = cli.encoder;
 
         match encoder {
             #[cfg(feature = "encode_pgp")]
