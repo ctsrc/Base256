@@ -307,7 +307,7 @@ Default is stdout; passing `-` also represents stdout.
 
 ## See also
 
-* [`pgen`(1)](https://crates.io/crates/pgen)
+* `pgen`(1) on [crates.io](https://crates.io/crates/pgen) / [GitHub](https://github.com/ctsrc/Pgen)
 
 ## Installation
 
