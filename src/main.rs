@@ -23,8 +23,12 @@ use std::io::{stdin, stdout, BufReader, BufWriter, Read, Write};
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
 
+#[cfg(feature = "encode_eff")]
+use base256::EffCodecEncode;
 #[cfg(any(feature = "encode_pgp", feature = "encode_eff"))]
 use base256::Encode;
+#[cfg(feature = "encode_pgp")]
+use base256::PgpCodecEncode;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, name = "lastresort")]
@@ -200,27 +204,13 @@ fn main() -> Result<()> {
         match encoder {
             #[cfg(feature = "encode_pgp")]
             Encoder::Pgp => {
-                let mut odd_even = 0;
-                for byte in input_bytes {
-                    if odd_even == 0 {
-                        write!(
-                            output,
-                            "{} ",
-                            base256::WL_PGPFONE_TWO_SYLLABLE[byte? as usize]
-                        )?
-                    } else {
-                        write!(
-                            output,
-                            "{} ",
-                            base256::WL_PGPFONE_THREE_SYLLABLE[byte? as usize]
-                        )?
-                    }
-                    odd_even = (odd_even + 1) % 2;
+                for word in Encode::<_, PgpCodecEncode<_>>::encode(input_bytes) {
+                    write!(output, "{} ", word?)?
                 }
             }
             #[cfg(feature = "encode_eff")]
             Encoder::Eff => {
-                for word in input_bytes.encode() {
+                for word in Encode::<_, EffCodecEncode<_>>::encode(input_bytes) {
                     write!(output, "{} ", word?)?
                 }
             }

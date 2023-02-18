@@ -16,9 +16,13 @@
 
 #[cfg(feature = "encode_eff")]
 mod eff;
+#[cfg(feature = "encode_pgp")]
+mod pgp;
 
 #[cfg(feature = "encode_eff")]
 pub use eff::*;
+#[cfg(feature = "encode_pgp")]
+pub use pgp::*;
 
 #[cfg(feature = "encode")]
 pub trait Encode<I: Iterator, C> {

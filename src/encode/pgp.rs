@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023 Erik Nordstrøm <erik@nordstroem.no>
+ * Copyright (c) 2023 Erik Nordstrøm <erik@nordstroem.no>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,41 +15,53 @@
  */
 
 #[derive(Clone, Debug)]
-pub struct EffCodecEncode<I: Iterator> {
+pub struct PgpCodecEncode<I: Iterator> {
     iter: I,
+    odd_even: u8,
 }
 
-impl<I, E> Iterator for EffCodecEncode<I>
+impl<I, E> Iterator for PgpCodecEncode<I>
 where
     I: Iterator<Item = Result<u8, E>>,
 {
     type Item = Result<&'static str, E>;
 
     fn next(&mut self) -> Option<Self::Item> {
+        let odd_even = self.odd_even;
+        self.odd_even = (odd_even + 1) % 2;
         match self.iter.next()? {
-            Ok(byte) => Some(Ok(crate::WL_AUTOCOMPLETE[byte as usize])),
+            Ok(byte) => {
+                if odd_even == 0 {
+                    Some(Ok(crate::WL_PGPFONE_TWO_SYLLABLE[byte as usize]))
+                } else {
+                    Some(Ok(crate::WL_PGPFONE_THREE_SYLLABLE[byte as usize]))
+                }
+            }
             Err(e) => Some(Err(e)),
         }
     }
 }
 
-impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, EffCodecEncode<I>> for I {
-    fn encode(self) -> EffCodecEncode<I> {
-        EffCodecEncode { iter: self }
+impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, PgpCodecEncode<I>> for I {
+    fn encode(self) -> PgpCodecEncode<I> {
+        PgpCodecEncode {
+            iter: self,
+            odd_even: 0,
+        }
     }
 }
 
 #[cfg(test)]
 mod test_cases_encode {
     use super::super::Encode;
-    use super::EffCodecEncode;
+    use super::PgpCodecEncode;
     use std::io::{Cursor, Read};
     use test_case::test_case;
 
-    #[test_case(&[0x05u8; 3], &["acuteness"; 3] ; "data 0x05 0x05 0x05")]
-    fn test_eff_encoder(bytes: &[u8], expected_result: &[&str]) {
+    #[test_case(&[0x05u8; 3], &["adult", "amulet", "adult"] ; "data 0x05 0x05 0x05")]
+    fn test_pgp_encoder(bytes: &[u8], expected_result: &[&str]) {
         let bytes = Cursor::new(bytes).bytes().into_iter();
-        let encoded = Encode::<_, EffCodecEncode<_>>::encode(bytes)
+        let encoded = Encode::<_, PgpCodecEncode<_>>::encode(bytes)
             .collect::<Result<Vec<_>, _>>()
             .unwrap();
         //dbg!(&encoded);
