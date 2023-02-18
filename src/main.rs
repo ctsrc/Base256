@@ -33,59 +33,33 @@ use base256::PgpCodecEncode;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, name = "lastresort")]
 struct Cli {
-    /// Decode data (default action is to encode data)
-    #[cfg(all(feature = "decode_pgp", feature = "encode"))]
-    #[arg(short, long, value_name = "DECODER", conflicts_with("encoder"))]
-    decode: Option<Option<Decoder>>,
-    /// Decode data (default action is to encode data)
-    #[cfg(all(
-        not(feature = "decode_pgp"),
-        feature = "decode_eff",
-        feature = "encode"
-    ))]
-    #[arg(short, long, value_name = "DECODER", required = false)]
-    decode: Option<Decoder>,
-    /// Decode data
-    #[cfg(all(feature = "decode_pgp", not(feature = "encode")))]
-    #[arg(short, long, value_name = "DECODER", required = true)]
-    decode: Option<Option<Decoder>>,
-    /// Decode data
-    #[cfg(all(
-        feature = "decode_eff",
-        not(feature = "decode_pgp"),
-        not(feature = "encode")
-    ))]
-    #[arg(short, long, value_name = "DECODER")]
-    decode: Decoder,
-    /// Encoder to use
-    #[cfg(all(feature = "encode_pgp", feature = "decode"))]
-    #[arg(short, long, conflicts_with("decode"))]
-    encoder: Option<Encoder>,
-    /// Encoder to use
-    #[cfg(all(
-        feature = "encode_eff",
-        not(feature = "encode_pgp"),
-        feature = "decode"
-    ))]
-    #[arg(
-        short,
-        long,
-        conflicts_with("decode"),
-        required_unless_present("decode")
-    )]
-    encoder: Option<Encoder>,
-    /// Encoder to use
-    #[cfg(all(feature = "encode_pgp", not(feature = "decode")))]
-    #[arg(short, long)]
-    encoder: Option<Encoder>,
-    /// Encoder to use
-    #[cfg(all(
-        feature = "encode_eff",
-        not(feature = "encode_pgp"),
-        not(feature = "decode")
-    ))]
-    #[arg(short, long)]
-    encoder: Encoder,
+    /*
+     * The decode feature can be enabled or disabled at compile-time.
+     * If the decode feature is enabled at compile-time:
+     * - There will be a "-d" flag available at run-time.
+     * - The requirements for the "-d" flag itself, and its argument, will depend on:
+     *   * Whether or not the encode feature is enabled at compile-time.
+     *   * Which decoders were enabled at compile-time.
+     */
+    #[cfg(feature = "decode")]
+    #[command(flatten)]
+    decoding: CliDecoding,
+
+    /*
+     * The encode feature can be enabled or disabled at compile-time.
+     * If the encode feature is enabled at compile-time:
+     * - There will be an "-e" flag available at run-time.
+     * - The requirements for the "-e" flag itself, and its argument, will depend on:
+     *   * Whether or not the decode feature is enabled at compile-time.
+     *   * Which encoders were enabled at compile-time.
+     */
+    #[cfg(feature = "encode")]
+    #[command(flatten)]
+    encoding: CliEncoding,
+
+    /*
+     * The input and output arguments are always available.
+     */
     /// Read input from INPUT_FILE. Default is stdin; passing - also represents stdin
     #[arg(short, long, value_name = "INPUT_FILE")]
     input: Option<String>,
@@ -94,6 +68,135 @@ struct Cli {
     output: Option<String>,
 }
 
+/*
+ * When both the decode and the encode features are enabled at compile-time:
+ * - The "-d" flag is optional.
+ * - The "-d" flag conflicts with the "-e" flag.
+ * - The requirements for the argument to the "-d" flag
+ *   depends on the decoders enabled at compile-time.
+ */
+#[cfg(all(feature = "decode", feature = "encode"))]
+#[derive(clap::Args)]
+struct CliDecoding {
+    /*
+     * When the decode_pgp feature is enabled at compile-time:
+     * - The "-d" flag itself remains optional, and
+     * - The "-d" flag can optionally take an argument to specify which decoder to use.
+     */
+    /// Decode data (default action is to encode data)
+    #[cfg(feature = "decode_pgp")]
+    #[arg(short, long, value_name = "DECODER", conflicts_with("encoder"))]
+    decode: Option<Option<Decoder>>,
+
+    /*
+     * When the decode_pgp feature is DISABLED at compile-time:
+     * - The "-d" flag itself remains optional, but
+     * - The "-d" flag when used takes a REQUIRED argument to specify which decoder to use.
+     */
+    /// Decode data (default action is to encode data)
+    #[cfg(all(feature = "decode_eff", not(feature = "decode_pgp")))]
+    #[arg(short, long, value_name = "DECODER", conflicts_with("encoder"))]
+    #[arg(required = false)]
+    decode: Option<Decoder>,
+}
+
+/*
+ * When the decode feature is enabled at compile-time,
+ * but the encode feature is DISABLED at compile-time:
+ * - The "-d" flag is REQUIRED.
+ * - The requirements for the argument to the "-d" flag
+ *   depends on the decoders enabled.
+ */
+#[cfg(all(feature = "decode", not(feature = "encode")))]
+#[derive(clap::Args)]
+struct CliDecoding {
+    /*
+     * When the decode_pgp feature is enabled at compile-time:
+     * - The "-d" flag itself remains REQUIRED, but
+     * - The "-d" flag can optionally take an argument to specify which decoder to use.
+     */
+    /// Decode data
+    #[cfg(feature = "decode_pgp")]
+    #[arg(short, long, value_name = "DECODER", required = true)]
+    decode: Option<Option<Decoder>>,
+
+    /*
+     * When the decode_pgp feature is DISABLED at compile-time:
+     * - The "-d" flag itself remains REQUIRED, and
+     * - The "-d" flag takes a REQUIRED argument to specify which decoder to use.
+     */
+    /// Decode data
+    #[cfg(all(feature = "decode_eff", not(feature = "decode_pgp")))]
+    #[arg(short, long, value_name = "DECODER")]
+    decode: Decoder,
+}
+
+/*
+ * When both the encode and decode features are enabled at compile-time:
+ * - The "-e" flag conflicts with the "-d" flag.
+ * - The requirements for the "-e" flag, and its argument,
+ *   depend on the encoders enabled at compile-time.
+ */
+#[cfg(all(feature = "encode", feature = "decode"))]
+#[derive(clap::Args)]
+struct CliEncoding {
+    /*
+     * When the encode_pgp feature is enabled at compile-time:
+     * - The "-e" flag itself is optional, and
+     * - The "-e" flag can optionally take an argument to specify which decoder to use.
+     */
+    /// Encoder to use
+    #[cfg(feature = "encode_pgp")]
+    #[arg(short, long, conflicts_with("decode"))]
+    encoder: Option<Encoder>,
+
+    /*
+     * When the encode_pgp feature is DISABLED at compile-time:
+     * - The "-e" flag itself is REQUIRED unless the "-d" flag is used, and
+     * - The "-e" flag takes a REQUIRED argument to specify which decoder to use.
+     */
+    /// Encoder to use
+    #[cfg(all(feature = "encode_eff", not(feature = "encode_pgp")))]
+    #[arg(
+        short,
+        long,
+        conflicts_with("decode"),
+        required_unless_present("decode")
+    )]
+    encoder: Option<Encoder>,
+}
+
+/*
+ * When the encode feature is enabled at compile-time,
+ * but the decode feature is DISABLED at compile-time:
+ * - The requirements for the "-e" flag, and its argument,
+ *   depend on the encoders enabled at compile-time.
+ */
+#[cfg(all(feature = "encode", not(feature = "decode")))]
+#[derive(clap::Args)]
+struct CliEncoding {
+    /*
+     * When the encode_pgp feature is enabled at compile-time:
+     * - The "-e" flag itself is optional, and
+     * - The "-e" flag can optionally take an argument to specify which decoder to use.
+     */
+    /// Encoder to use
+    #[cfg(feature = "encode_pgp")]
+    #[arg(short, long)]
+    encoder: Option<Encoder>,
+
+    /*
+     * When the encode_pgp feature is DISABLED at compile-time:
+     * - The "-e" flag itself is REQUIRED, and
+     * - The "-e" flag takes a REQUIRED argument to specify which decoder to use.
+     */
+    /// Encoder to use
+    #[cfg(all(feature = "encode_eff", not(feature = "encode_pgp")))]
+    #[arg(short, long)]
+    encoder: Encoder,
+}
+
+#[cfg(feature = "encode")]
 #[derive(ValueEnum, Clone)]
 enum Encoder {
     /// PGP Word List. The default encoder
@@ -104,6 +207,7 @@ enum Encoder {
     Eff,
 }
 
+#[cfg(feature = "decode")]
 #[derive(ValueEnum, Clone)]
 enum Decoder {
     /// PGP Word List. The default decoder
@@ -146,7 +250,7 @@ fn main() -> Result<()> {
         #[cfg(not(any(feature = "decode_pgp", feature = "decode_eff")))]
         compile_error!("Building bin target with decoding feature enabled requires that at least one decoder is enabled");
 
-        let decoder = cli.decode;
+        let decoder = cli.decoding.decode;
 
         #[cfg(all(
             feature = "decode_eff",
@@ -182,24 +286,26 @@ fn main() -> Result<()> {
         }
     }
 
-    #[cfg(not(any(feature = "encode_pgp", feature = "encode_eff")))]
-    compile_error!("Building bin target with encoding feature enabled requires that at least one encoder is enabled");
-
-    #[cfg(any(feature = "encode_pgp", feature = "encode_eff"))]
+    #[cfg(feature = "encode")]
     {
+        #[cfg(not(any(feature = "encode_pgp", feature = "encode_eff")))]
+        compile_error!("Building bin target with encoding feature enabled requires that at least one encoder is enabled");
+
+        let encoder = cli.encoding.encoder;
+
         // If support for the PGP encoder was compiled, then it is the default encoder..
         #[cfg(feature = "encode_pgp")]
-        let encoder = cli.encoder.unwrap_or(Encoder::Pgp);
+        let encoder = encoder.unwrap_or(Encoder::Pgp);
         // ..otherwise, the encoder has to be provided as a cli arg.
         #[cfg(all(feature = "decode", not(feature = "encode_pgp")))]
-        let encoder = match cli.encoder {
+        let encoder = match encoder {
             Some(encoder) => encoder,
             None => {
                 unreachable!("This match arm should never be reached due to clap parse rules.");
             }
         };
         #[cfg(not(any(feature = "decode", feature = "encode_pgp")))]
-        let encoder = cli.encoder;
+        let encoder = encoder;
 
         match encoder {
             #[cfg(feature = "encode_pgp")]
