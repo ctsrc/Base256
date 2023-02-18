@@ -2,6 +2,7 @@
 
 [![Crates.io](https://img.shields.io/crates/v/base256?style=flat-square)](https://crates.io/crates/base256)
 [![Crates.io](https://img.shields.io/crates/d/base256?style=flat-square)](https://crates.io/crates/base256)
+[![Crates.io](https://img.shields.io/docsrs/base256?style=flat-square)](https://docs.rs/crate/base256/latest)
 [![License](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/ctsrc/Base256?style=social)](https://github.com/ctsrc/Base256#start-of-content)
 
