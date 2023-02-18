@@ -14,6 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+/// Base 256 encoder using PGP Word List
 #[derive(Clone, Debug)]
 pub struct PgpEncode<I: Iterator> {
     iter: I,

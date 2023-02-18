@@ -14,6 +14,7 @@ fn main() {
 
         #[cfg(feature = "wl_eff")]
         {
+            f_dest.write_all(b"/// EFF Short Wordlist 2.0\n").unwrap();
             f_dest
                 .write_all(b"pub const WL_AUTOCOMPLETE: &[&str] = &[")
                 .unwrap();
@@ -35,6 +36,9 @@ fn main() {
         #[cfg(feature = "wl_pgp")]
         {
             f_dest
+                .write_all(b"/// PGP Word List -- PGPfone Three Syllable Word List\n")
+                .unwrap();
+            f_dest
                 .write_all(b"pub const WL_PGPFONE_THREE_SYLLABLE: &[&str] = &[")
                 .unwrap();
             let words = read_to_string("pgpfone_three_syllable_word_list.txt").unwrap();
@@ -43,6 +47,9 @@ fn main() {
             }
             f_dest.write_all(b"];\n").unwrap();
 
+            f_dest
+                .write_all(b"/// PGP Word List -- PGPfone Two Syllable Word List\n")
+                .unwrap();
             f_dest
                 .write_all(b"pub const WL_PGPFONE_TWO_SYLLABLE: &[&str] = &[")
                 .unwrap();

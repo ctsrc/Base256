@@ -14,6 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+/// Base 256 encoder using EFF Short Wordlist 2.0
 #[derive(Clone, Debug)]
 pub struct EffEncode<I: Iterator> {
     iter: I,

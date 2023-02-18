@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+//! Encode and decode data in base 256
+
 #[cfg(not(any(
     feature = "encode",
     feature = "decode",

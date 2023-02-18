@@ -24,6 +24,7 @@ pub use eff::*;
 #[cfg(feature = "encode_pgp")]
 pub use pgp::*;
 
+/// Base 256 encoder trait
 #[cfg(feature = "encode")]
 pub trait Encode<I: Iterator, C> {
     fn encode(self) -> C;
