@@ -12,15 +12,17 @@ edition = "2021"
 
 [features]
 default = ["bin", "encode_pgp", "decode_pgp", "encode_eff", "decode_eff"]
-bin = ["dep:clap", "dep:anyhow"]
+bin = ["dep:clap", "dep:anyhow", "dep:utf8-chars"]
 encode = []
 decode = []
-encode_pgp = ["wl_pgp", "encode"]
-decode_pgp = ["wl_pgp", "decode"]
-encode_eff = ["wl_eff", "encode"]
-decode_eff = ["wl_eff", "decode"]
-wl_eff = []
-wl_pgp = []
+encode_pgp = ["wl_pgp_encode", "encode"]
+decode_pgp = ["wl_pgp_decode", "decode"]
+encode_eff = ["wl_eff_encode", "encode"]
+decode_eff = ["wl_eff_decode", "decode"]
+wl_pgp_encode = []
+wl_pgp_decode = []
+wl_eff_encode = []
+wl_eff_decode = []
 
 [lib]
 path = "src/lib.rs"
@@ -33,6 +35,8 @@ required-features = ["bin"]
 [dependencies]
 anyhow = { version = "1.0", default-features = false, features = ["std"], optional = true }
 clap = { version = "4.1", default-features = false, features = ["std", "derive", "help", "usage", "error-context"], optional = true }
+utf8-chars = { version = "2.0", default-features = false, optional = true }
 
 [dev-dependencies]
 test-case = "2.2"
+utf8-chars = { version = "2.0", default-features = false }

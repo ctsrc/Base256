@@ -1,7 +1,30 @@
+/*
+ * Copyright (c) 2018, 2023 Erik Nordstrøm <erik@nordstroem.no>
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
 // https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
 
+include!("src/decode/include/wordlist_entry.rs");
+
 fn main() {
-    #[cfg(any(feature = "wl_eff", feature = "wl_pgp"))]
+    #[cfg(any(
+        feature = "wl_eff_encode",
+        feature = "wl_eff_decode",
+        feature = "wl_pgp_encode",
+        feature = "wl_pgp_decode"
+    ))]
     {
         use std::env;
         use std::fs::{read_to_string, File};
@@ -9,55 +32,84 @@ fn main() {
         use std::path::Path;
 
         let out_dir = env::var("OUT_DIR").unwrap();
-        let dest_path = Path::new(&out_dir).join("256.rs");
-        let mut f_dest = File::create(&dest_path).unwrap();
 
-        #[cfg(feature = "wl_eff")]
+        let dest_path_enc = Path::new(&out_dir).join("wl_encode.rs");
+        let mut f_dest_enc = File::create(&dest_path_enc).unwrap();
+
+        let dest_path_dec = Path::new(&out_dir).join("wl_decode.rs");
+        let mut f_dest_dec = File::create(&dest_path_dec).unwrap();
+
+        #[cfg(any(feature = "wl_eff_encode", feature = "wl_eff_decode"))]
         {
-            f_dest.write_all(b"/// EFF Short Wordlist 2.0\n").unwrap();
-            f_dest
-                .write_all(b"pub const WL_AUTOCOMPLETE: &[&str] = &[")
-                .unwrap();
             let f_src = BufReader::new(File::open("eff_short_wordlist_2_0.txt").unwrap());
+            let mut words = vec![];
             for (i, line) in f_src.lines().take(1024).enumerate() {
                 if i % 4 == 0 {
-                    f_dest.write_all(b"\"").unwrap();
-
-                    f_dest
-                        .write_all(line.unwrap().split('\t').nth(1).unwrap().as_bytes())
-                        .unwrap();
-
-                    f_dest.write_all(b"\",").unwrap();
+                    let line = line.unwrap();
+                    let word = line.split('\t').nth(1).unwrap().to_string();
+                    words.push(word);
                 }
             }
-            f_dest.write_all(b"];\n").unwrap();
+
+            #[cfg(feature = "wl_eff_encode")]
+            {
+                writeln!(f_dest_enc, "/// EFF Short Wordlist 2.0 (encode)").unwrap();
+                writeln!(f_dest_enc, "pub const WL_EFF_ENCODE: &[&str] = &{words:?};").unwrap();
+            }
+
+            #[cfg(feature = "wl_eff_decode")]
+            {
+                let words_lower: Vec<_> = words.iter().map(|w| w.to_lowercase()).collect();
+                let mut words_decode: Vec<_> = words_lower
+                    .iter()
+                    .enumerate()
+                    .map(|(pos, word)| WordlistDecodeEntry {
+                        word,
+                        byte: pos as u8,
+                    })
+                    .collect();
+                words_decode.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+                writeln!(f_dest_dec, "/// EFF Short Wordlist 2.0 (decode)").unwrap();
+                writeln!(
+                    f_dest_dec,
+                    "const WL_EFF_DECODE: &[WordlistDecodeEntry] = &{words_decode:?};"
+                )
+                .unwrap();
+            }
         }
 
-        #[cfg(feature = "wl_pgp")]
+        #[cfg(any(feature = "wl_pgp_encode", feature = "wl_pgp_decode"))]
         {
-            f_dest
-                .write_all(b"/// PGP Word List -- PGPfone Three Syllable Word List\n")
-                .unwrap();
-            f_dest
-                .write_all(b"pub const WL_PGPFONE_THREE_SYLLABLE: &[&str] = &[")
-                .unwrap();
-            let words = read_to_string("pgpfone_three_syllable_word_list.txt").unwrap();
-            for word in words.split(' ') {
-                write!(f_dest, "\"{word}\",").unwrap();
-            }
-            f_dest.write_all(b"];\n").unwrap();
+            let words_3_s = read_to_string("pgpfone_three_syllable_word_list.txt").unwrap();
+            let words_3: Vec<_> = words_3_s.split(' ').collect();
+            let words_2_s = read_to_string("pgpfone_two_syllable_word_list.txt").unwrap();
+            let words_2: Vec<_> = words_2_s.split(' ').collect();
 
-            f_dest
-                .write_all(b"/// PGP Word List -- PGPfone Two Syllable Word List\n")
+            #[cfg(feature = "wl_pgp_encode")]
+            {
+                writeln!(
+                    f_dest_enc,
+                    "/// PGP Word List (encode) -- PGPfone Three Syllable Word List"
+                )
                 .unwrap();
-            f_dest
-                .write_all(b"pub const WL_PGPFONE_TWO_SYLLABLE: &[&str] = &[")
+                writeln!(
+                    f_dest_enc,
+                    "pub const WL_PGP_ENCODE_THREE_SYLLABLE: &[&str] = &{words_3:?};"
+                )
                 .unwrap();
-            let words = read_to_string("pgpfone_two_syllable_word_list.txt").unwrap();
-            for word in words.split(' ') {
-                write!(f_dest, "\"{word}\",").unwrap();
+
+                writeln!(
+                    f_dest_enc,
+                    "/// PGP Word List (encode) -- PGPfone Two Syllable Word List"
+                )
+                .unwrap();
+                writeln!(
+                    f_dest_enc,
+                    "pub const WL_PGP_ENCODE_TWO_SYLLABLE: &[&str] = &{words_2:?};"
+                )
+                .unwrap();
             }
-            f_dest.write_all(b"];\n").unwrap();
         }
     }
 }

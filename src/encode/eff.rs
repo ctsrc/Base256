@@ -28,7 +28,7 @@ where
 
     fn next(&mut self) -> Option<Self::Item> {
         match self.iter.next()? {
-            Ok(byte) => Some(Ok(crate::WL_AUTOCOMPLETE[byte as usize])),
+            Ok(byte) => Some(Ok(crate::WL_EFF_ENCODE[byte as usize])),
             Err(e) => Some(Err(e)),
         }
     }
@@ -48,12 +48,11 @@ mod test_cases_encode {
     use test_case::test_case;
 
     #[test_case(&[0x05u8; 3], &["acuteness"; 3] ; "data 0x05 0x05 0x05")]
-    fn test_eff_encoder(bytes: &[u8], expected_result: &[&str]) {
+    fn test_eff_encoder(bytes: &[u8], expected_words: &[&str]) {
         let bytes = Cursor::new(bytes).bytes().into_iter();
-        let encoded = Encode::<_, EffEncode<_>>::encode(bytes)
+        let encoded_words = Encode::<_, EffEncode<_>>::encode(bytes)
             .collect::<Result<Vec<_>, _>>()
             .unwrap();
-        //dbg!(&encoded);
-        assert_eq!(encoded, expected_result);
+        assert_eq!(encoded_words, expected_words);
     }
 }

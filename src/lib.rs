@@ -19,40 +19,40 @@
 #[cfg(not(any(
     feature = "encode",
     feature = "decode",
-    feature = "wl_eff",
-    feature = "wl_pgp"
+    feature = "wl_eff_encode",
+    feature = "wl_pgp_encode"
 )))]
-compile_error!("Building lib target requires that at least one of the following features is enabled: encode; decode; wl_eff; wl_pgp");
+compile_error!("Building lib target requires that at least one of the following features is enabled: encode; decode; wl_eff_encode; wl_pgp_encode");
 
+#[cfg(feature = "decode")]
+mod decode;
 #[cfg(feature = "encode")]
 mod encode;
 
+#[cfg(feature = "decode")]
+pub use decode::*;
 #[cfg(feature = "encode")]
 pub use encode::*;
 
-// https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
-#[cfg(any(feature = "wl_eff", feature = "wl_pgp"))]
-include!(concat!(env!("OUT_DIR"), "/256.rs"));
-
-#[cfg(any(feature = "wl_eff", feature = "wl_pgp"))]
+#[cfg(any(feature = "wl_eff_encode", feature = "wl_pgp_encode"))]
 #[cfg(test)]
 mod tests_word_lists_sorted_extent {
     use super::*;
 
-    #[cfg(feature = "wl_eff")]
+    #[cfg(feature = "wl_eff_encode")]
     #[test]
     /// The autocomplete wordlist based on the EFF Short Wordlist 2.0 is sorted.
     fn test_wl_autocomplete_is_sorted() {
-        assert!(WL_AUTOCOMPLETE.windows(2).all(|w| w[0] <= w[1]));
+        assert!(WL_EFF_ENCODE.windows(2).all(|w| w[0] <= w[1]));
     }
 
-    #[cfg(feature = "wl_pgp")]
+    #[cfg(feature = "wl_pgp_encode")]
     #[test]
     /// The three syllable PGP word list is mostly sorted,
     /// except for the fact that the word "applicant" comes
     /// before the word "Apollo".
     fn test_wl_pgpfone_three_syllable_lowercase_is_mostly_sorted() {
-        assert!(WL_PGPFONE_THREE_SYLLABLE.windows(2).all(|w| {
+        assert!(WL_PGP_ENCODE_THREE_SYLLABLE.windows(2).all(|w| {
             //dbg!(w);
             if w[0] == "applicant" && w[1] == "Apollo" {
                 true
@@ -62,31 +62,31 @@ mod tests_word_lists_sorted_extent {
         }));
     }
 
-    #[cfg(feature = "wl_pgp")]
+    #[cfg(feature = "wl_pgp_encode")]
     #[test]
     /// The two syllable PGP word list is sorted.
     fn test_wl_pgpfone_two_syllable_lowercase_is_sorted() {
-        assert!(WL_PGPFONE_TWO_SYLLABLE
+        assert!(WL_PGP_ENCODE_TWO_SYLLABLE
             .windows(2)
             .all(|w| w[0].to_lowercase() <= w[1].to_lowercase()));
     }
 }
 
-#[cfg(feature = "wl_eff")]
+#[cfg(feature = "wl_eff_encode")]
 #[cfg(test)]
 #[test]
 fn wl_eff_contains_256_words() {
-    assert_eq!(WL_AUTOCOMPLETE.len(), 256);
+    assert_eq!(WL_EFF_ENCODE.len(), 256);
 }
 
-#[cfg(feature = "wl_pgp")]
+#[cfg(feature = "wl_pgp_encode")]
 #[cfg(test)]
-mod wl_eff_contains_256_words {
+mod wl_pgp_contains_256_words {
     use super::*;
     use test_case::test_case;
 
-    #[test_case(WL_PGPFONE_THREE_SYLLABLE ; "three-syllable word list contains 256 words")]
-    #[test_case(WL_PGPFONE_TWO_SYLLABLE ; "two-syllable word list contains 256 words")]
+    #[test_case(WL_PGP_ENCODE_THREE_SYLLABLE ; "three-syllable word list contains 256 words")]
+    #[test_case(WL_PGP_ENCODE_TWO_SYLLABLE ; "two-syllable word list contains 256 words")]
     fn wl_contains_256_words(wl: &[&str]) {
         assert_eq!(wl.len(), 256);
     }

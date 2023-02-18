@@ -14,21 +14,20 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#[cfg(feature = "encode_eff")]
-mod eff;
-#[cfg(feature = "encode_pgp")]
-mod pgp;
+use std::cmp::Ordering;
 
-#[cfg(feature = "encode_eff")]
-pub use eff::*;
-#[cfg(feature = "encode_pgp")]
-pub use pgp::*;
+#[derive(Clone, Debug, PartialEq)]
+struct WordlistDecodeEntry<'a> {
+    word: &'a str,
+    byte: u8,
+}
 
-#[cfg(any(feature = "wl_eff_encode", feature = "wl_pgp_encode"))]
-include!(concat!(env!("OUT_DIR"), "/wl_encode.rs"));
-
-/// Base 256 encoder trait
-#[cfg(feature = "encode")]
-pub trait Encode<I: Iterator, E> {
-    fn encode(self) -> E;
+impl<'a> PartialOrd for WordlistDecodeEntry<'a> {
+    /// Word list decode entries are sorted by the length of the word and then by the word itself
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        match self.word.len().partial_cmp(&other.word.len())? {
+            Ordering::Equal => self.word.partial_cmp(other.word),
+            ordering => Some(ordering),
+        }
+    }
 }

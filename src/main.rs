@@ -18,10 +18,12 @@
 compile_error!("Building bin target requires that at least one encoder or decoder is enabled");
 
 use std::fs::{File, OpenOptions};
-use std::io::{stdin, stdout, BufReader, BufWriter, Read, Write};
+use std::io::{stdin, stdout, BufRead, BufReader, BufWriter, Read, Write};
 
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
+#[cfg(any(feature = "decode_pgp", feature = "decode_eff"))]
+use utf8_chars::BufReadCharsExt;
 
 #[cfg(feature = "encode_eff")]
 use base256::EffEncode;
@@ -29,6 +31,13 @@ use base256::EffEncode;
 use base256::Encode;
 #[cfg(feature = "encode_pgp")]
 use base256::PgpEncode;
+
+#[cfg(any(feature = "decode_pgp", feature = "decode_eff"))]
+use base256::Decode;
+#[cfg(feature = "decode_eff")]
+use base256::EffDecode;
+#[cfg(feature = "decode_pgp")]
+use base256::PgpDecode;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, name = "lastresort")]
@@ -221,17 +230,16 @@ enum Decoder {
 fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    let input: Box<dyn Read> = match cli.input {
-        None => Box::new(stdin()),
+    let mut input: Box<dyn BufRead> = match cli.input {
+        None => Box::new(stdin().lock()),
         Some(path) => {
             if path == "-" {
-                Box::new(stdin())
+                Box::new(stdin().lock())
             } else {
                 Box::new(BufReader::new(File::open(path)?))
             }
         }
     };
-    let input_bytes = input.bytes();
 
     let mut output: Box<dyn Write> = match cli.output {
         None => Box::new(stdout()),
@@ -260,6 +268,8 @@ fn main() -> Result<()> {
         let decoder = Some(Some(decoder)); // TODO: Something less messy for this feature set
 
         if let Some(decoder) = decoder {
+            let input_chars = input.chars();
+
             // If support for the PGP decoder was compiled, then it is the default decoder..
             #[cfg(feature = "decode_pgp")]
             let decoder = decoder.unwrap_or(Decoder::Pgp);
@@ -275,11 +285,15 @@ fn main() -> Result<()> {
             match decoder {
                 #[cfg(feature = "decode_pgp")]
                 Decoder::Pgp => {
-                    todo!();
+                    for byte in Decode::<_, PgpDecode<_>>::decode(input_chars) {
+                        output.write_all(&[byte?])?;
+                    }
                 }
                 #[cfg(feature = "decode_eff")]
                 Decoder::Eff => {
-                    todo!();
+                    for byte in Decode::<_, EffDecode<_>>::decode(input_chars) {
+                        output.write_all(&[byte?])?;
+                    }
                 }
             }
             return Ok(());
@@ -288,6 +302,8 @@ fn main() -> Result<()> {
 
     #[cfg(feature = "encode")]
     {
+        let input_bytes = input.bytes();
+
         #[cfg(not(any(feature = "encode_pgp", feature = "encode_eff")))]
         compile_error!("Building bin target with encoding feature enabled requires that at least one encoder is enabled");
 

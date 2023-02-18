@@ -33,9 +33,9 @@ where
         match self.iter.next()? {
             Ok(byte) => {
                 if odd_even == 0 {
-                    Some(Ok(crate::WL_PGPFONE_TWO_SYLLABLE[byte as usize]))
+                    Some(Ok(crate::WL_PGP_ENCODE_TWO_SYLLABLE[byte as usize]))
                 } else {
-                    Some(Ok(crate::WL_PGPFONE_THREE_SYLLABLE[byte as usize]))
+                    Some(Ok(crate::WL_PGP_ENCODE_THREE_SYLLABLE[byte as usize]))
                 }
             }
             Err(e) => Some(Err(e)),
@@ -60,12 +60,11 @@ mod test_cases_encode {
     use test_case::test_case;
 
     #[test_case(&[0x05u8; 3], &["adult", "amulet", "adult"] ; "data 0x05 0x05 0x05")]
-    fn test_pgp_encoder(bytes: &[u8], expected_result: &[&str]) {
+    fn test_pgp_encoder(bytes: &[u8], expected_words: &[&str]) {
         let bytes = Cursor::new(bytes).bytes().into_iter();
-        let encoded = Encode::<_, PgpEncode<_>>::encode(bytes)
+        let encoded_words = Encode::<_, PgpEncode<_>>::encode(bytes)
             .collect::<Result<Vec<_>, _>>()
             .unwrap();
-        //dbg!(&encoded);
-        assert_eq!(encoded, expected_result);
+        assert_eq!(encoded_words, expected_words);
     }
 }
