@@ -24,11 +24,11 @@ use anyhow::Result;
 use clap::{Parser, ValueEnum};
 
 #[cfg(feature = "encode_eff")]
-use base256::EffCodecEncode;
+use base256::EffEncode;
 #[cfg(any(feature = "encode_pgp", feature = "encode_eff"))]
 use base256::Encode;
 #[cfg(feature = "encode_pgp")]
-use base256::PgpCodecEncode;
+use base256::PgpEncode;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, name = "lastresort")]
@@ -310,13 +310,13 @@ fn main() -> Result<()> {
         match encoder {
             #[cfg(feature = "encode_pgp")]
             Encoder::Pgp => {
-                for word in Encode::<_, PgpCodecEncode<_>>::encode(input_bytes) {
+                for word in Encode::<_, PgpEncode<_>>::encode(input_bytes) {
                     write!(output, "{} ", word?)?
                 }
             }
             #[cfg(feature = "encode_eff")]
             Encoder::Eff => {
-                for word in Encode::<_, EffCodecEncode<_>>::encode(input_bytes) {
+                for word in Encode::<_, EffEncode<_>>::encode(input_bytes) {
                     write!(output, "{} ", word?)?
                 }
             }

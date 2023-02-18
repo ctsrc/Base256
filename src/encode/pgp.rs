@@ -15,12 +15,12 @@
  */
 
 #[derive(Clone, Debug)]
-pub struct PgpCodecEncode<I: Iterator> {
+pub struct PgpEncode<I: Iterator> {
     iter: I,
     odd_even: u8,
 }
 
-impl<I, E> Iterator for PgpCodecEncode<I>
+impl<I, E> Iterator for PgpEncode<I>
 where
     I: Iterator<Item = Result<u8, E>>,
 {
@@ -42,9 +42,9 @@ where
     }
 }
 
-impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, PgpCodecEncode<I>> for I {
-    fn encode(self) -> PgpCodecEncode<I> {
-        PgpCodecEncode {
+impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, PgpEncode<I>> for I {
+    fn encode(self) -> PgpEncode<I> {
+        PgpEncode {
             iter: self,
             odd_even: 0,
         }
@@ -54,14 +54,14 @@ impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, PgpCodecEncode<I>> f
 #[cfg(test)]
 mod test_cases_encode {
     use super::super::Encode;
-    use super::PgpCodecEncode;
+    use super::PgpEncode;
     use std::io::{Cursor, Read};
     use test_case::test_case;
 
     #[test_case(&[0x05u8; 3], &["adult", "amulet", "adult"] ; "data 0x05 0x05 0x05")]
     fn test_pgp_encoder(bytes: &[u8], expected_result: &[&str]) {
         let bytes = Cursor::new(bytes).bytes().into_iter();
-        let encoded = Encode::<_, PgpCodecEncode<_>>::encode(bytes)
+        let encoded = Encode::<_, PgpEncode<_>>::encode(bytes)
             .collect::<Result<Vec<_>, _>>()
             .unwrap();
         //dbg!(&encoded);

@@ -15,11 +15,11 @@
  */
 
 #[derive(Clone, Debug)]
-pub struct EffCodecEncode<I: Iterator> {
+pub struct EffEncode<I: Iterator> {
     iter: I,
 }
 
-impl<I, E> Iterator for EffCodecEncode<I>
+impl<I, E> Iterator for EffEncode<I>
 where
     I: Iterator<Item = Result<u8, E>>,
 {
@@ -33,23 +33,23 @@ where
     }
 }
 
-impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, EffCodecEncode<I>> for I {
-    fn encode(self) -> EffCodecEncode<I> {
-        EffCodecEncode { iter: self }
+impl<I: Iterator<Item = Result<u8, E>>, E> crate::Encode<I, EffEncode<I>> for I {
+    fn encode(self) -> EffEncode<I> {
+        EffEncode { iter: self }
     }
 }
 
 #[cfg(test)]
 mod test_cases_encode {
     use super::super::Encode;
-    use super::EffCodecEncode;
+    use super::EffEncode;
     use std::io::{Cursor, Read};
     use test_case::test_case;
 
     #[test_case(&[0x05u8; 3], &["acuteness"; 3] ; "data 0x05 0x05 0x05")]
     fn test_eff_encoder(bytes: &[u8], expected_result: &[&str]) {
         let bytes = Cursor::new(bytes).bytes().into_iter();
-        let encoded = Encode::<_, EffCodecEncode<_>>::encode(bytes)
+        let encoded = Encode::<_, EffEncode<_>>::encode(bytes)
             .collect::<Result<Vec<_>, _>>()
             .unwrap();
         //dbg!(&encoded);
