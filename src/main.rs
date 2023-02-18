@@ -143,7 +143,7 @@ struct CliEncoding {
     /*
      * When the encode_pgp feature is enabled at compile-time:
      * - The "-e" flag itself is optional, and
-     * - The "-e" flag can optionally take an argument to specify which decoder to use.
+     * - The "-e" flag takes a REQUIRED argument to specify which decoder to use.
      */
     /// Encoder to use
     #[cfg(feature = "encode_pgp")]
@@ -178,7 +178,7 @@ struct CliEncoding {
     /*
      * When the encode_pgp feature is enabled at compile-time:
      * - The "-e" flag itself is optional, and
-     * - The "-e" flag can optionally take an argument to specify which decoder to use.
+     * - The "-e" flag takes a REQUIRED argument to specify which decoder to use.
      */
     /// Encoder to use
     #[cfg(feature = "encode_pgp")]
