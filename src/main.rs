@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#![forbid(unsafe_code)]
+
 #[cfg(not(any(feature = "encode", feature = "decode")))]
 compile_error!("Building bin target requires that at least one encoder or decoder is enabled");
 

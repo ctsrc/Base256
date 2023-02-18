@@ -16,6 +16,8 @@
 
 //! Encode and decode data in base 256
 
+#![forbid(unsafe_code)]
+
 #[cfg(not(any(
     feature = "encode",
     feature = "decode",
