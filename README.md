@@ -284,7 +284,7 @@ lastresort -V | --version
 ```
 
 With no options, `lastresort` reads raw data from stdin
-and writes encoded data as a continuous block to stdout.
+and writes encoded data as a continuous block of human words to stdout.
 
 ### Options
 
