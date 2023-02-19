@@ -44,8 +44,8 @@ where
             }
 
             self.curr_match_len += word_chars.len();
-            dbg!(self.curr_match_len);
-            dbg!(&self.candidate_wl_subsets_remaining);
+            //dbg!(self.curr_match_len);
+            //dbg!(&self.candidate_wl_subsets_remaining);
 
             // Remove subsets that are too short from the current set of possible matches.
             let first_subset_remaining = self
@@ -61,12 +61,12 @@ where
                 for entry in subset.words {
                     let word_remainder_to_match = &entry.word[self.prev_match_len..];
                     if word_remainder_to_match.starts_with(&*word_chars) {
-                        dbg!(entry.word, &word_chars, word_remainder_to_match);
+                        //dbg!(entry.word, &word_chars, word_remainder_to_match);
                         break;
                     }
                     subset_words_idx_low += 1;
                 }
-                dbg!(subset.words);
+                //dbg!(subset.words);
                 subset.words = &subset.words[subset_words_idx_low..];
                 //dbg!(subset.words);
 
@@ -83,7 +83,7 @@ where
                 }
                 //dbg!(subset.words);
                 subset.words = &subset.words[..subset_words_idx_high];
-                dbg!(subset.words);
+                //dbg!(subset.words);
             }
 
             // Remove empty subsets
@@ -103,7 +103,7 @@ where
 
             // Exact match
             if self.candidate_wl_subsets_remaining.len() == 1 {
-                dbg!(&self.candidate_wl_subsets_remaining);
+                //dbg!(&self.candidate_wl_subsets_remaining);
                 if self.candidate_wl_subsets_remaining[0].words.len() == 1
                     && self.curr_match_len == self.candidate_wl_subsets_remaining[0].word_len
                 {
