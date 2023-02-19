@@ -16,7 +16,6 @@
 
 // https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
 
-use std::fmt::{Debug, Formatter};
 include!("src/decode/include/candidate_words.rs");
 
 fn main() {

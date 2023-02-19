@@ -39,7 +39,7 @@ where
             let word_char: Vec<_> = word_char.to_lowercase().collect();
 
             // We skip space, newline and carriage return characters
-            if &word_char == &[' '] || &word_char == &['\n'] || &word_char == &['\r'] {
+            if word_char == [' '] || word_char == ['\n'] || word_char == ['\r'] {
                 continue;
             }
 
