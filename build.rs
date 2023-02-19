@@ -46,6 +46,7 @@ fn main() {
                     words.push(word);
                 }
             }
+            let words = words;
 
             #[cfg(feature = "wl_eff_encode")]
             {
@@ -63,36 +64,8 @@ fn main() {
             #[cfg(feature = "wl_eff_decode")]
             {
                 let words_lower: Vec<_> = words.iter().map(|w| w.to_lowercase()).collect();
-                let mut words_decode: Vec<_> = words_lower
-                    .iter()
-                    .enumerate()
-                    .map(|(pos, word)| WordlistDecodeEntry {
-                        word,
-                        byte: pos as u8,
-                    })
-                    .collect();
-                words_decode.sort_by(|a, b| a.partial_cmp(b).unwrap());
-                let wl_subsets: Vec<(_, _)> =
-                    words_decode.into_iter().fold(Vec::new(), |mut acc, entry| {
-                        if acc.is_empty() {
-                            acc.push((entry.word.len(), vec![entry]));
-                        } else {
-                            let curr_subset = acc.last_mut().unwrap();
-                            if curr_subset.0 == entry.word.len() {
-                                curr_subset.1.push(entry);
-                            } else {
-                                acc.push((entry.word.len(), vec![entry]));
-                            }
-                        }
-                        acc
-                    });
-                let wl_subsets: Vec<_> = wl_subsets
-                    .iter()
-                    .map(|wl_subset| WordlistSubset {
-                        word_len: wl_subset.0,
-                        words: &wl_subset.1,
-                    })
-                    .collect();
+                let wl_decode_entries = create_wl_decode_entries(&words_lower);
+                let wl_subsets = create_wl_decode(&wl_decode_entries);
 
                 let fpath_wl_eff_decode = Path::new(&out_dir).join("wl_eff_decode.rs");
                 let mut f_wl_eff_decode = File::create(fpath_wl_eff_decode).unwrap();
@@ -147,11 +120,78 @@ fn main() {
 
             #[cfg(feature = "wl_pgp_decode")]
             {
+                let words_3_lower: Vec<_> = words_3.iter().map(|w| w.to_lowercase()).collect();
+                let wl_decode_entries_3 = create_wl_decode_entries(&words_3_lower);
+                let wl_subsets_3 = create_wl_decode(&wl_decode_entries_3);
+
+                let words_2_lower: Vec<_> = words_2.iter().map(|w| w.to_lowercase()).collect();
+                let wl_decode_entries_2 = create_wl_decode_entries(&words_2_lower);
+                let wl_subsets_2 = create_wl_decode(&wl_decode_entries_2);
+
                 let fpath_wl_pgp_decode = Path::new(&out_dir).join("wl_pgp_decode.rs");
                 let mut f_wl_pgp_decode = File::create(fpath_wl_pgp_decode).unwrap();
 
-                // TODO
+                writeln!(
+                    f_wl_pgp_decode,
+                    "/// PGP Word List (decode) -- PGPfone Three Syllable Word List"
+                )
+                .unwrap();
+                writeln!(
+                    f_wl_pgp_decode,
+                    "const WL_PGP_DECODE_THREE_SYLLABLE: &[WordlistSubset] = &{wl_subsets_3:?};"
+                )
+                .unwrap();
+
+                writeln!(
+                    f_wl_pgp_decode,
+                    "/// PGP Word List (decode) -- PGPfone Two Syllable Word List"
+                )
+                .unwrap();
+                writeln!(
+                    f_wl_pgp_decode,
+                    "const WL_PGP_DECODE_TWO_SYLLABLE: &[WordlistSubset] = &{wl_subsets_2:?};"
+                )
+                .unwrap();
             }
         }
     }
+}
+
+#[cfg(any(feature = "wl_eff_decode", feature = "wl_pgp_decode"))]
+fn create_wl_decode_entries(words_lower: &[String]) -> Vec<(usize, Vec<WordlistDecodeEntry>)> {
+    let mut words_decode: Vec<_> = words_lower
+        .iter()
+        .enumerate()
+        .map(|(pos, word)| WordlistDecodeEntry {
+            word,
+            byte: pos as u8,
+        })
+        .collect();
+    words_decode.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let wl_subsets: Vec<(_, _)> = words_decode.into_iter().fold(Vec::new(), |mut acc, entry| {
+        if acc.is_empty() {
+            acc.push((entry.word.len(), vec![entry]));
+        } else {
+            let curr_subset = acc.last_mut().unwrap();
+            if curr_subset.0 == entry.word.len() {
+                curr_subset.1.push(entry);
+            } else {
+                acc.push((entry.word.len(), vec![entry]));
+            }
+        }
+        acc
+    });
+    wl_subsets
+}
+
+fn create_wl_decode<'a>(
+    wl_subsets: &'a [(usize, Vec<WordlistDecodeEntry<'a>>)],
+) -> Vec<WordlistSubset<'a>> {
+    wl_subsets
+        .iter()
+        .map(|wl_subset| WordlistSubset {
+            word_len: wl_subset.0,
+            words: &wl_subset.1,
+        })
+        .collect()
 }
