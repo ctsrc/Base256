@@ -183,4 +183,19 @@ mod test_cases_decode {
 
         assert_eq!(decoded_bytes, expected_bytes);
     }
+
+    #[test_case("id_ed25519-fold_w_78_s.txt")]
+    #[test_case("id_ed25519-fold_w_78_s-trimmed.txt")]
+    fn test_negative_pgp_decoder_sample_data_file_id_ed25519<P: AsRef<Path>>(fpath_encoded: P) {
+        let fpath_encoded = Path::new("sample_data/encoded_corrupted/pgp").join(fpath_encoded);
+        let mut input_encoded = BufReader::new(File::open(fpath_encoded).unwrap());
+
+        let decoded_bytes =
+            Decode::<_, PgpDecode<_>>::decode(input_encoded.chars()).collect::<Result<Vec<_>, _>>();
+
+        assert_eq!(
+            decoded_bytes.unwrap_err().kind(),
+            std::io::ErrorKind::InvalidData
+        );
+    }
 }
