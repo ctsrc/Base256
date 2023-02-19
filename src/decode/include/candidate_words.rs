@@ -23,7 +23,7 @@ struct WordlistSubset<'a> {
     /// The length of each word in this subset of the wordlist.
     word_len: usize,
     /// The words in this subset of the wordlist.
-    words: &'a [WordlistDecodeEntry<'a>],
+    pub(crate) words: &'a [WordlistDecodeEntry<'a>],
 }
 
 impl<'a> std::fmt::Debug for WordlistSubset<'a> {
@@ -38,7 +38,7 @@ impl<'a> std::fmt::Debug for WordlistSubset<'a> {
 
 #[derive(Clone, Debug, PartialEq)]
 struct WordlistDecodeEntry<'a> {
-    word: &'a str,
+    pub(crate) word: &'a str,
     byte: u8,
 }
 

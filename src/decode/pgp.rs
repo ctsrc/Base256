@@ -52,7 +52,7 @@ mod test_cases_decode {
     use utf8_chars::BufReadCharsExt;
 
     #[test_case("adult amulet adult "; "words spaced")]
-    #[test_case("a dult amu let adu lt "; "words extra space")]
+    #[test_case("a  dult amu let adu   lt "; "words extra space")]
     #[test_case("adultamuletadult"; "words mushed")]
     #[test_case("adult amulet \nadult "; "words spaced wrapped")]
     #[test_case("adultamuletad\nult"; "words mushed wrapped")]
