@@ -328,14 +328,22 @@ fn main() -> Result<()> {
         match encoder {
             #[cfg(feature = "encode_pgp")]
             Encoder::Pgp => {
-                for word in Encode::<_, PgpEncode<_>>::encode(input_bytes) {
-                    write!(output, "{} ", word?)?
+                let mut encoded = Encode::<_, PgpEncode<_>>::encode(input_bytes);
+                if let Some(word) = encoded.next() {
+                    write!(output, "{}", word?)?;
+                }
+                for word in encoded {
+                    write!(output, " {}", word?)?
                 }
             }
             #[cfg(feature = "encode_eff")]
             Encoder::Eff => {
-                for word in Encode::<_, EffEncode<_>>::encode(input_bytes) {
-                    write!(output, "{} ", word?)?
+                let mut encoded = Encode::<_, EffEncode<_>>::encode(input_bytes);
+                if let Some(word) = encoded.next() {
+                    write!(output, "{}", word?)?;
+                }
+                for word in encoded {
+                    write!(output, " {}", word?)?
                 }
             }
         }

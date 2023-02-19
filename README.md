@@ -212,7 +212,7 @@ crowfoot equation commence decadence allow commando button commando button
 commando crusade enchanting crumpled cannonball dropper enterprise crusade 
 enchanting dwelling escapade deckhand cannonball drumbeat equipment dogsled 
 examine cranky Eskimo crusade cannonball dragnet dinosaur endow commando 
-button commando button commando allow 
+button commando button commando allow
 ```
 
 ### Example output using the EFF Short Wordlist 2.0 encoder
@@ -273,7 +273,7 @@ cinnamon clubhouse dealer daughter exfoliate dresser depot dealer dwelling
 cybernetic cybernetic alchemy carrot carrot carrot carrot carrot depot dryer 
 deliverer badass dugout dustpan depot dryer ebook ebook dimple badass dustpan 
 eagerness directory eggnog daughter ecosystem depot badass dominoes depot 
-elsewhere carrot carrot carrot carrot carrot alchemy 
+elsewhere carrot carrot carrot carrot carrot alchemy
 ```
 
 ## Usage
