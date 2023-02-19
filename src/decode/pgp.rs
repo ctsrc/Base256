@@ -47,7 +47,9 @@ impl<I: Iterator<Item = Result<char, D>>, D> crate::Decode<I, PgpDecode<I>> for 
 mod test_cases_decode {
     use super::super::Decode;
     use super::PgpDecode;
-    use std::io::Cursor;
+    use std::fs::File;
+    use std::io::{BufReader, Cursor};
+    use std::path::Path;
     use test_case::test_case;
     use utf8_chars::BufReadCharsExt;
 
@@ -58,12 +60,30 @@ mod test_cases_decode {
     #[test_case("adultamuletad\nult"; "words mushed wrapped")]
     #[test_case("ADULT AMULET ADULT "; "words spaced uppercase")]
     #[test_case("Adult AMUlet aDULT "; "words spaced mixed-case")]
-    fn test_pgp_decoder_positive_0x05_0x05_0x05(words: &str) {
+    fn test_positive_pgp_decoder_0x05_0x05_0x05(words: &str) {
         let mut cursor = Cursor::new(words);
         let words_chars = cursor.chars().into_iter();
         let decoded_bytes = Decode::<_, PgpDecode<_>>::decode(words_chars)
             .collect::<Result<Vec<_>, _>>()
             .unwrap();
         assert_eq!(decoded_bytes, &[0x05u8; 3]);
+    }
+
+    #[test_case("id_ed25519.txt")]
+    #[test_case("id_ed25519-fold_w_78.txt")]
+    #[test_case("id_ed25519-fold_w_78_s.txt")]
+    #[test_case("id_ed25519-fold_w_78_s-trimmed.txt")]
+    fn test_positive_pgp_decoder_sample_data_file_id_ed25519<P: AsRef<Path>>(fpath_encoded: P) {
+        let fpath_original_id_ed25519 = "sample_data/original/id_ed25519";
+        let expected_bytes = std::fs::read(fpath_original_id_ed25519).unwrap();
+
+        let fpath_encoded = Path::new("sample_data/encoded/pgp").join(fpath_encoded);
+        let mut input_encoded = BufReader::new(File::open(fpath_encoded).unwrap());
+
+        let decoded_bytes = Decode::<_, PgpDecode<_>>::decode(input_encoded.chars())
+            .collect::<Result<Vec<_>, _>>()
+            .unwrap();
+
+        assert_eq!(decoded_bytes, expected_bytes);
     }
 }
