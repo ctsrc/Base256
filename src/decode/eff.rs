@@ -81,19 +81,19 @@ mod test_cases_decode {
     use test_case::test_case;
     use utf8_chars::BufReadCharsExt;
 
-    #[test_case("acuteness acuteness acuteness ", &[0x05u8; 3]; "words spaced")]
-    #[test_case("acute ness a cute ness acuten ess ", &[0x05u8; 3]; "words extra space")]
-    #[test_case("acutenessacutenessacuteness", &[0x05u8; 3]; "words mushed")]
-    #[test_case("acuteness acuteness \nacuteness ", &[0x05u8; 3]; "words spaced wrapped")]
-    #[test_case("acutenessacut\nenessacuteness", &[0x05u8; 3]; "words mushed wrapped")]
-    #[test_case("ACUTENESS ACUTENESS ACUTENESS ", &[0x05u8; 3]; "words spaced uppercase")]
-    #[test_case("Acuteness ACUTEness acuteNESS ", &[0x05u8; 3]; "words spaced mixed-case")]
-    fn test_eff_decoder_positive(words: &str, expected_bytes: &[u8]) {
+    #[test_case("acuteness acuteness acuteness "; "words spaced")]
+    #[test_case("acute ness a cute ness acuten ess "; "words extra space")]
+    #[test_case("acutenessacutenessacuteness"; "words mushed")]
+    #[test_case("acuteness acuteness \nacuteness "; "words spaced wrapped")]
+    #[test_case("acutenessacut\nenessacuteness"; "words mushed wrapped")]
+    #[test_case("ACUTENESS ACUTENESS ACUTENESS "; "words spaced uppercase")]
+    #[test_case("Acuteness ACUTEness acuteNESS "; "words spaced mixed-case")]
+    fn test_eff_decoder_positive_0x05_0x05_0x05(words: &str) {
         let mut cursor = Cursor::new(words);
         let words_chars = cursor.chars().into_iter();
         let decoded_bytes = Decode::<_, EffDecode<_>>::decode(words_chars)
             .collect::<Result<Vec<_>, _>>()
             .unwrap();
-        assert_eq!(decoded_bytes, expected_bytes);
+        assert_eq!(decoded_bytes, &[0x05u8; 3]);
     }
 }

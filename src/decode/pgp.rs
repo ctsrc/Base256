@@ -51,19 +51,19 @@ mod test_cases_decode {
     use test_case::test_case;
     use utf8_chars::BufReadCharsExt;
 
-    #[test_case("adult amulet adult ", &[0x05u8; 3]; "words spaced")]
-    #[test_case("a dult amu let adu lt ", &[0x05u8; 3]; "words extra space")]
-    #[test_case("adultamuletadult", &[0x05u8; 3]; "words mushed")]
-    #[test_case("adult amulet \nadult ", &[0x05u8; 3]; "words spaced wrapped")]
-    #[test_case("adultamuletad\nult", &[0x05u8; 3]; "words mushed wrapped")]
-    #[test_case("ADULT AMULET ADULT ", &[0x05u8; 3]; "words spaced uppercase")]
-    #[test_case("Adult AMUlet aDULT ", &[0x05u8; 3]; "words spaced mixed-case")]
-    fn test_pgp_decoder_positive(words: &str, expected_bytes: &[u8]) {
+    #[test_case("adult amulet adult "; "words spaced")]
+    #[test_case("a dult amu let adu lt "; "words extra space")]
+    #[test_case("adultamuletadult"; "words mushed")]
+    #[test_case("adult amulet \nadult "; "words spaced wrapped")]
+    #[test_case("adultamuletad\nult"; "words mushed wrapped")]
+    #[test_case("ADULT AMULET ADULT "; "words spaced uppercase")]
+    #[test_case("Adult AMUlet aDULT "; "words spaced mixed-case")]
+    fn test_pgp_decoder_positive_0x05_0x05_0x05(words: &str) {
         let mut cursor = Cursor::new(words);
         let words_chars = cursor.chars().into_iter();
         let decoded_bytes = Decode::<_, PgpDecode<_>>::decode(words_chars)
             .collect::<Result<Vec<_>, _>>()
             .unwrap();
-        assert_eq!(decoded_bytes, expected_bytes);
+        assert_eq!(decoded_bytes, &[0x05u8; 3]);
     }
 }
