@@ -33,8 +33,10 @@ include!("include/candidate_words.rs");
 
 // Note: Decode lists are currently not exported, as they are rather specific to the implementation.
 // Note: The decode lists are generated at compile-time by the build script.
-#[cfg(any(feature = "wl_eff_decode", feature = "wl_pgp_decode"))]
-include!(concat!(env!("OUT_DIR"), "/wl_decode.rs"));
+#[cfg(feature = "wl_eff_decode")]
+include!(concat!(env!("OUT_DIR"), "/wl_eff_decode.rs"));
+#[cfg(feature = "wl_pgp_decode")]
+include!(concat!(env!("OUT_DIR"), "/wl_pgp_decode.rs"));
 
 /// Base 256 decoder trait
 #[cfg(feature = "decode")]

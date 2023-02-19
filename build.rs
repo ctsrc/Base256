@@ -27,20 +27,16 @@ fn main() {
     ))]
     {
         use std::env;
-        use std::fs::{read_to_string, File};
-        use std::io::{BufRead, BufReader, Write};
+        use std::fs::File;
+        use std::io::Write;
         use std::path::Path;
 
         let out_dir = env::var("OUT_DIR").unwrap();
 
-        let dest_path_enc = Path::new(&out_dir).join("wl_encode.rs");
-        let mut f_dest_enc = File::create(&dest_path_enc).unwrap();
-
-        let dest_path_dec = Path::new(&out_dir).join("wl_decode.rs");
-        let mut f_dest_dec = File::create(&dest_path_dec).unwrap();
-
         #[cfg(any(feature = "wl_eff_encode", feature = "wl_eff_decode"))]
         {
+            use std::io::{BufRead, BufReader};
+
             let f_src = BufReader::new(File::open("eff_short_wordlist_2_0.txt").unwrap());
             let mut words = vec![];
             for (i, line) in f_src.lines().take(1024).enumerate() {
@@ -53,8 +49,15 @@ fn main() {
 
             #[cfg(feature = "wl_eff_encode")]
             {
-                writeln!(f_dest_enc, "/// EFF Short Wordlist 2.0 (encode)").unwrap();
-                writeln!(f_dest_enc, "pub const WL_EFF_ENCODE: &[&str] = &{words:?};").unwrap();
+                let fpath_wl_eff_encode = Path::new(&out_dir).join("wl_eff_encode.rs");
+                let mut f_wl_eff_encode = File::create(&fpath_wl_eff_encode).unwrap();
+
+                writeln!(f_wl_eff_encode, "/// EFF Short Wordlist 2.0 (encode)").unwrap();
+                writeln!(
+                    f_wl_eff_encode,
+                    "pub const WL_EFF_ENCODE: &[&str] = &{words:?};"
+                )
+                .unwrap();
             }
 
             #[cfg(feature = "wl_eff_decode")]
@@ -91,9 +94,12 @@ fn main() {
                     })
                     .collect();
 
-                writeln!(f_dest_dec, "/// EFF Short Wordlist 2.0 (decode)").unwrap();
+                let fpath_wl_eff_decode = Path::new(&out_dir).join("wl_eff_decode.rs");
+                let mut f_wl_eff_decode = File::create(&fpath_wl_eff_decode).unwrap();
+
+                writeln!(f_wl_eff_decode, "/// EFF Short Wordlist 2.0 (decode)").unwrap();
                 writeln!(
-                    f_dest_dec,
+                    f_wl_eff_decode,
                     "const WL_EFF_DECODE: &[WordlistSubset] = &{wl_subsets:?};"
                 )
                 .unwrap();
@@ -104,6 +110,8 @@ fn main() {
 
         #[cfg(any(feature = "wl_pgp_encode", feature = "wl_pgp_decode"))]
         {
+            use std::fs::read_to_string;
+
             let words_3_s = read_to_string("pgpfone_three_syllable_word_list.txt").unwrap();
             let words_3: Vec<_> = words_3_s.split(' ').collect();
             let words_2_s = read_to_string("pgpfone_two_syllable_word_list.txt").unwrap();
@@ -111,27 +119,38 @@ fn main() {
 
             #[cfg(feature = "wl_pgp_encode")]
             {
+                let fpath_wl_pgp_encode = Path::new(&out_dir).join("wl_pgp_encode.rs");
+                let mut f_wl_pgp_encode = File::create(&fpath_wl_pgp_encode).unwrap();
+
                 writeln!(
-                    f_dest_enc,
+                    f_wl_pgp_encode,
                     "/// PGP Word List (encode) -- PGPfone Three Syllable Word List"
                 )
                 .unwrap();
                 writeln!(
-                    f_dest_enc,
+                    f_wl_pgp_encode,
                     "pub const WL_PGP_ENCODE_THREE_SYLLABLE: &[&str] = &{words_3:?};"
                 )
                 .unwrap();
 
                 writeln!(
-                    f_dest_enc,
+                    f_wl_pgp_encode,
                     "/// PGP Word List (encode) -- PGPfone Two Syllable Word List"
                 )
                 .unwrap();
                 writeln!(
-                    f_dest_enc,
+                    f_wl_pgp_encode,
                     "pub const WL_PGP_ENCODE_TWO_SYLLABLE: &[&str] = &{words_2:?};"
                 )
                 .unwrap();
+            }
+
+            #[cfg(feature = "wl_pgp_decode")]
+            {
+                let fpath_wl_pgp_decode = Path::new(&out_dir).join("wl_pgp_decode.rs");
+                let mut f_wl_pgp_decode = File::create(&fpath_wl_pgp_decode).unwrap();
+
+                // TODO
             }
         }
     }

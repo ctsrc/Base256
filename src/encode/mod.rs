@@ -24,8 +24,10 @@ pub use eff::*;
 #[cfg(feature = "encode_pgp")]
 pub use pgp::*;
 
-#[cfg(any(feature = "wl_eff_encode", feature = "wl_pgp_encode"))]
-include!(concat!(env!("OUT_DIR"), "/wl_encode.rs"));
+#[cfg(feature = "wl_eff_encode")]
+include!(concat!(env!("OUT_DIR"), "/wl_eff_encode.rs"));
+#[cfg(feature = "wl_pgp_encode")]
+include!(concat!(env!("OUT_DIR"), "/wl_pgp_encode.rs"));
 
 /// Base 256 encoder trait
 #[cfg(feature = "encode")]
