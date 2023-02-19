@@ -24,11 +24,12 @@ pub use eff::*;
 #[cfg(feature = "decode_pgp")]
 pub use pgp::*;
 
-// Note: Decode list entry struct is currently not exported, as it is rather specific to the implementation.
-// Note: The list entry struct implementation is included at compile-time so that both the build script
+// Note: Decode candidate words struct and decode list entry struct are currently not exported,
+//       as they are rather specific to the implementation.
+// Note: Said struct implementations are included at compile-time so that both the build script
 //       and the crate itself can share that code.
 #[cfg(any(feature = "wl_eff_decode", feature = "wl_pgp_decode"))]
-include!("include/wordlist_entry.rs");
+include!("include/candidate_words.rs");
 
 // Note: Decode lists are currently not exported, as they are rather specific to the implementation.
 // Note: The decode lists are generated at compile-time by the build script.

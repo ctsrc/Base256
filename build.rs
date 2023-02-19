@@ -16,7 +16,8 @@
 
 // https://doc.rust-lang.org/cargo/reference/build-scripts.html#case-study-code-generation
 
-include!("src/decode/include/wordlist_entry.rs");
+use std::fmt::{Debug, Formatter};
+include!("src/decode/include/candidate_words.rs");
 
 fn main() {
     #[cfg(any(
@@ -69,13 +70,39 @@ fn main() {
                     })
                     .collect();
                 words_decode.sort_by(|a, b| a.partial_cmp(b).unwrap());
+                let wl_subsets: Vec<(_, _)> =
+                    words_decode
+                        .clone()
+                        .into_iter()
+                        .fold(Vec::new(), |mut acc, entry| {
+                            if acc.is_empty() {
+                                acc.push((entry.word.len(), vec![entry]));
+                            } else {
+                                let curr_subset = acc.last_mut().unwrap();
+                                if curr_subset.0 == entry.word.len() {
+                                    curr_subset.1.push(entry);
+                                } else {
+                                    acc.push((entry.word.len(), vec![entry]));
+                                }
+                            }
+                            acc
+                        });
+                let wl_subsets: Vec<_> = wl_subsets
+                    .iter()
+                    .map(|wl_subset| WordlistSubset {
+                        word_len: wl_subset.0,
+                        words: &wl_subset.1,
+                    })
+                    .collect();
 
                 writeln!(f_dest_dec, "/// EFF Short Wordlist 2.0 (decode)").unwrap();
                 writeln!(
                     f_dest_dec,
-                    "const WL_EFF_DECODE: &[WordlistDecodeEntry] = &{words_decode:?};"
+                    "const WL_EFF_DECODE: &[WordlistSubset] = &{wl_subsets:?};"
                 )
                 .unwrap();
+
+                drop(wl_subsets);
             }
         }
 

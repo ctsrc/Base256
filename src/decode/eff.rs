@@ -14,14 +14,14 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-use super::WordlistDecodeEntry;
+use super::WordlistSubset;
 
 /// Base 256 decoder using EFF Short Wordlist 2.0
 #[derive(Clone, Debug)]
 pub struct EffDecode<I: Iterator> {
     iter: I,
-    candidate_words_remaining: &'static [WordlistDecodeEntry<'static>],
-    candidates_offset_to_first_curr: usize,
+    candidate_wl_subsets_remaining: Vec<WordlistSubset<'static>>,
+    prev_match_len: usize,
     curr_match_len: usize,
 }
 
@@ -36,16 +36,25 @@ where
             // We immediately return the error if one is encountered.
             let Ok(word_char) = word_byte else { return Some(Err(word_byte.err().unwrap())) };
 
-            let word_char = word_char.to_lowercase();
+            let word_char: Vec<_> = word_char.to_lowercase().collect();
+
+            // We skip space, newline and carriage return characters
+            if &word_char == &[' '] || &word_char == &['\n'] || &word_char == &['\r'] {
+                continue;
+            }
+
             self.curr_match_len += word_char.len();
             dbg!(self.curr_match_len);
 
-            let first_candidate_remaining = self
-                .candidate_words_remaining
-                .partition_point(|entry| entry.word.len() >= self.curr_match_len);
+            // Remove subsets that are too short from the current set of possible matches.
+            let first_subset_remaining = self
+                .candidate_wl_subsets_remaining
+                .partition_point(|wl| wl.word_len < self.curr_match_len);
+            self.candidate_wl_subsets_remaining =
+                self.candidate_wl_subsets_remaining[first_subset_remaining..].to_owned();
 
-            dbg!(first_candidate_remaining);
-            if self.candidate_words_remaining.len() <= 1 {
+            dbg!(&self.candidate_wl_subsets_remaining);
+            if self.candidate_wl_subsets_remaining.len() <= 1 {
                 break;
             }
         }
@@ -57,8 +66,8 @@ impl<I: Iterator<Item = Result<char, D>>, D> crate::Decode<I, EffDecode<I>> for 
     fn decode(self) -> EffDecode<I> {
         EffDecode {
             iter: self,
-            candidate_words_remaining: super::WL_EFF_DECODE,
-            candidates_offset_to_first_curr: 0,
+            candidate_wl_subsets_remaining: super::WL_EFF_DECODE.to_vec(),
+            prev_match_len: 0,
             curr_match_len: 0,
         }
     }

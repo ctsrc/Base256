@@ -16,6 +16,26 @@
 
 use std::cmp::Ordering;
 
+/// A sorted subset of the words in a wordlist.
+/// All words in this subset have the same length, and are sorted.
+#[derive(Clone)]
+struct WordlistSubset<'a> {
+    /// The length of each word in this subset of the wordlist.
+    word_len: usize,
+    /// The words in this subset of the wordlist.
+    words: &'a [WordlistDecodeEntry<'a>],
+}
+
+impl<'a> std::fmt::Debug for WordlistSubset<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(
+            f,
+            "WordlistSubset {{ word_len: {}, words: &{:?} }}",
+            self.word_len, self.words
+        )
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 struct WordlistDecodeEntry<'a> {
     word: &'a str,
