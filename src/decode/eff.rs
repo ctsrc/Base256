@@ -101,7 +101,7 @@ where
                 return Some(Err(std::io::Error::from(std::io::ErrorKind::InvalidData)));
             }
 
-            // Exact match
+            // Check for exact match
             if self.candidate_wl_subsets_remaining.len() == 1 {
                 //dbg!(&self.candidate_wl_subsets_remaining);
                 if self.candidate_wl_subsets_remaining[0].words.len() == 1
