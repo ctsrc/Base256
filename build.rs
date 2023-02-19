@@ -70,22 +70,19 @@ fn main() {
                     .collect();
                 words_decode.sort_by(|a, b| a.partial_cmp(b).unwrap());
                 let wl_subsets: Vec<(_, _)> =
-                    words_decode
-                        .clone()
-                        .into_iter()
-                        .fold(Vec::new(), |mut acc, entry| {
-                            if acc.is_empty() {
-                                acc.push((entry.word.len(), vec![entry]));
+                    words_decode.into_iter().fold(Vec::new(), |mut acc, entry| {
+                        if acc.is_empty() {
+                            acc.push((entry.word.len(), vec![entry]));
+                        } else {
+                            let curr_subset = acc.last_mut().unwrap();
+                            if curr_subset.0 == entry.word.len() {
+                                curr_subset.1.push(entry);
                             } else {
-                                let curr_subset = acc.last_mut().unwrap();
-                                if curr_subset.0 == entry.word.len() {
-                                    curr_subset.1.push(entry);
-                                } else {
-                                    acc.push((entry.word.len(), vec![entry]));
-                                }
+                                acc.push((entry.word.len(), vec![entry]));
                             }
-                            acc
-                        });
+                        }
+                        acc
+                    });
                 let wl_subsets: Vec<_> = wl_subsets
                     .iter()
                     .map(|wl_subset| WordlistSubset {
