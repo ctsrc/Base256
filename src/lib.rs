@@ -26,12 +26,28 @@
 )))]
 compile_error!("Building lib target requires that at least one of the following features is enabled: encode; decode; wl_eff_encode; wl_pgp_encode");
 
-#[cfg(feature = "decode")]
+#[cfg(any(
+    feature = "decode",
+    feature = "wl_eff_decode",
+    feature = "wl_pgp_decode"
+))]
 mod decode;
-#[cfg(feature = "encode")]
+#[cfg(any(
+    feature = "encode",
+    feature = "wl_eff_encode",
+    feature = "wl_pgp_encode"
+))]
 mod encode;
 
-#[cfg(feature = "decode")]
+#[cfg(any(
+    feature = "decode",
+    feature = "wl_eff_decode",
+    feature = "wl_pgp_decode"
+))]
 pub use decode::*;
-#[cfg(feature = "encode")]
+#[cfg(any(
+    feature = "encode",
+    feature = "wl_eff_encode",
+    feature = "wl_pgp_encode"
+))]
 pub use encode::*;
