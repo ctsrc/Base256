@@ -7,7 +7,7 @@ repository = "https://github.com/ctsrc/Base256"
 version = "0.4.0"
 authors = ["Erik Nordstrøm <erik@nordstroem.no>"]
 homepage = "https://ctsrc.github.io/Base256"
-categories = ["command-line-utilities", "parser-implementations"]
+categories = ["command-line-utilities", "parser-implementations", "text-processing"]
 edition = "2021"
 
 [features]
