@@ -50,7 +50,7 @@ fn main() {
             #[cfg(feature = "wl_eff_encode")]
             {
                 let fpath_wl_eff_encode = Path::new(&out_dir).join("wl_eff_encode.rs");
-                let mut f_wl_eff_encode = File::create(&fpath_wl_eff_encode).unwrap();
+                let mut f_wl_eff_encode = File::create(fpath_wl_eff_encode).unwrap();
 
                 writeln!(f_wl_eff_encode, "/// EFF Short Wordlist 2.0 (encode)").unwrap();
                 writeln!(
@@ -95,7 +95,7 @@ fn main() {
                     .collect();
 
                 let fpath_wl_eff_decode = Path::new(&out_dir).join("wl_eff_decode.rs");
-                let mut f_wl_eff_decode = File::create(&fpath_wl_eff_decode).unwrap();
+                let mut f_wl_eff_decode = File::create(fpath_wl_eff_decode).unwrap();
 
                 writeln!(f_wl_eff_decode, "/// EFF Short Wordlist 2.0 (decode)").unwrap();
                 writeln!(
@@ -120,7 +120,7 @@ fn main() {
             #[cfg(feature = "wl_pgp_encode")]
             {
                 let fpath_wl_pgp_encode = Path::new(&out_dir).join("wl_pgp_encode.rs");
-                let mut f_wl_pgp_encode = File::create(&fpath_wl_pgp_encode).unwrap();
+                let mut f_wl_pgp_encode = File::create(fpath_wl_pgp_encode).unwrap();
 
                 writeln!(
                     f_wl_pgp_encode,
@@ -148,7 +148,7 @@ fn main() {
             #[cfg(feature = "wl_pgp_decode")]
             {
                 let fpath_wl_pgp_decode = Path::new(&out_dir).join("wl_pgp_decode.rs");
-                let mut f_wl_pgp_decode = File::create(&fpath_wl_pgp_decode).unwrap();
+                let mut f_wl_pgp_decode = File::create(fpath_wl_pgp_decode).unwrap();
 
                 // TODO
             }
