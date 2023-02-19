@@ -56,7 +56,18 @@ where
                 self.candidate_wl_subsets_remaining[first_subset_remaining..].to_owned();
 
             for subset in self.candidate_wl_subsets_remaining.iter_mut() {
-                // Find first word in subset that matches so far
+                // Find first word in subset that matches so far (alternate implementation)
+                for (i, word_char) in word_chars.iter().enumerate() {
+                    let subset_words_idx_low = subset.words.partition_point(|entry| {
+                        entry.word.chars().nth(self.prev_match_len + i).unwrap() < *word_char
+                    });
+                    //dbg!(subset.words);
+                    subset.words = &subset.words[subset_words_idx_low..];
+                    //dbg!(subset.words);
+                }
+
+                /*
+                // Find first word in subset that matches so far (original implementation)
                 let mut subset_words_idx_low = 0;
                 for entry in subset.words {
                     let word_remainder_to_match = &entry.word[self.prev_match_len..];
@@ -69,6 +80,7 @@ where
                 //dbg!(subset.words);
                 subset.words = &subset.words[subset_words_idx_low..];
                 //dbg!(subset.words);
+                 */
 
                 // Find last word in subset that matches so far
                 let subset_words_idx_high = subset.words.partition_point(|entry| {
