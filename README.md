@@ -111,7 +111,7 @@ https://en.wikipedia.org/wiki/PGP_word_list
 
 ### EFF Short Wordlist 2.0
 
-The EFF Short Wordlist 2.0 is a list of 1,296 memorable and distinct words
+The EFF Short Wordlist 2.0 is a list of memorable and distinct words
 with a few additional features making the words easy to type:
 
 > * Each word has a unique three-character prefix. This means that future
@@ -126,7 +126,8 @@ https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases
 This wordlist is also used in the `pgen` passphrase generator.
 See https://github.com/ctsrc/pgen for more about `pgen`.
 
-In `lastresort`, 256 of the words from this list are used when using this codec.
+In `lastresort`, 256 of the words from this list are used
+when using the legacy codec.
 
 ## Example input and outputs using the different codecs
 
