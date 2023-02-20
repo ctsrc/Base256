@@ -205,6 +205,33 @@ examine cranky Eskimo crusade cannonball dragnet dinosaur endow commando
 button commando button commando allow
 ```
 
+## Compression
+
+The preferable way to deal with compression, when compression is desired,
+is to separately compress the data first using for example gzip, xz, bzip2,
+brotli or lzma, depending on your requirements and which compression tools
+you have available on your devices.
+
+Then use lastresort to encode the compressed data. On the other device
+you then decode with lastresort and then decompress that with the decompression
+tool corresponding to the compression tool you used.
+
+Practical example:
+
+- Compress data with xz and then encode it
+
+  ```zsh
+  xz < sample_data/original/id_ed25519 | lastresort | fold -w 78 -s | awk '{$1=$1};1'
+  ```
+
+- On the other device, input the encoded words into a text file and then decode and decompress that
+
+  ```zsh
+  mkdir -p ~/tmp/
+  vim ~/tmp/id_ed25519_compressed_words.txt
+  lastresort -d < ~/tmp/id_ed25519_compressed_words.txt | unxz > ~/tmp/id_ed25519
+  ```
+
 ## Usage
 
 ```
