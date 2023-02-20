@@ -60,7 +60,7 @@ mod test_cases_encode {
     use test_case::test_case;
 
     #[test_case(&[0x05u8; 3], &["adult", "amulet", "adult"] ; "data 0x05 0x05 0x05")]
-    fn test_pgp_encoder(bytes: &[u8], expected_words: &[&str]) {
+    fn test_positive_pgp_encoder(bytes: &[u8], expected_words: &[&str]) {
         let bytes = Cursor::new(bytes).bytes().into_iter();
         let encoded_words = Encode::<_, PgpEncode<_>>::encode(bytes)
             .collect::<Result<Vec<_>, _>>()

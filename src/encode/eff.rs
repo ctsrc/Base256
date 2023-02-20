@@ -48,7 +48,7 @@ mod test_cases_encode {
     use test_case::test_case;
 
     #[test_case(&[0x05u8; 3], &["acuteness"; 3] ; "data 0x05 0x05 0x05")]
-    fn test_eff_encoder(bytes: &[u8], expected_words: &[&str]) {
+    fn test_positive_eff_encoder(bytes: &[u8], expected_words: &[&str]) {
         let bytes = Cursor::new(bytes).bytes().into_iter();
         let encoded_words = Encode::<_, EffEncode<_>>::encode(bytes)
             .collect::<Result<Vec<_>, _>>()
