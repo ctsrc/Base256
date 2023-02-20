@@ -149,8 +149,8 @@ p0r3nHUmj+QkHx6zg7YdAAAAEGVyaWtuQGxpYmVyYXRpb24BAgMEBQ==
 -----END OPENSSH PRIVATE KEY-----
 ```
 
-For the sake of brevity, the output that results when using
-the legacy encoder is omitted from this README.
+For the sake of brevity, the base 256 encoded output that results
+when using the legacy encoder is omitted from this README.
 
 The base 256 encoded output that results when using the default
 encoder is shown in the next subsection.
