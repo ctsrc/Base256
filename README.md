@@ -218,7 +218,7 @@ tool corresponding to the compression tool you used.
 
 Practical example using the file `sample_data/original/id_ed25519` as the
 data we want to compress, encode, type in on another device and
-decode and decompress.
+decode and decompress:
 
 - Compress data from some file with xz and then encode it.
 
