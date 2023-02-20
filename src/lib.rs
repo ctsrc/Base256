@@ -51,3 +51,50 @@ pub use decode::*;
     feature = "wl_pgp_encode"
 ))]
 pub use encode::*;
+
+#[cfg(all(feature = "encode", feature = "decode"))]
+#[cfg(test)]
+mod test_cases_encode {
+    use super::{Decode, Encode};
+    #[cfg(all(feature = "encode_eff", feature = "decode_eff"))]
+    use super::{EffDecode, EffEncode};
+    #[cfg(all(feature = "encode_pgp", feature = "decode_pgp"))]
+    use super::{PgpDecode, PgpEncode};
+    use std::io::{Cursor, Read};
+    use test_case::test_case;
+    use utf8_chars::BufReadCharsExt;
+
+    #[cfg(all(feature = "encode_pgp", feature = "decode_pgp"))]
+    #[test_case(&[0x00u8; 3] ; "data 0x00 0x00 0x00")]
+    #[test_case(&*(0x00u8..=0xFF).collect::<Vec<_>>() ; "data 0x00..0xFF")]
+    #[test_case(&*(0x01u8..=0xFF).collect::<Vec<_>>() ; "data 0x01..0xFF")]
+    fn test_positive_roundtrip_pgp_codec(bytes_orig: &[u8]) {
+        let bytes = Cursor::new(bytes_orig).bytes().into_iter();
+        let mut encoded_words = Encode::<_, PgpEncode<_>>::encode(bytes)
+            .collect::<Result<String, _>>()
+            .unwrap();
+        let mut cursor = Cursor::new(encoded_words);
+        let words_chars = cursor.chars().into_iter();
+        let decoded_bytes = Decode::<_, PgpDecode<_>>::decode(words_chars)
+            .collect::<Result<Vec<_>, _>>()
+            .unwrap();
+        assert_eq!(bytes_orig, decoded_bytes);
+    }
+
+    #[cfg(all(feature = "encode_eff", feature = "decode_eff"))]
+    #[test_case(&[0x00u8; 3] ; "data 0x00 0x00 0x00")]
+    #[test_case(&*(0x00u8..=0xFF).collect::<Vec<_>>() ; "data 0x00..0xFF")]
+    #[test_case(&*(0x01u8..=0xFF).collect::<Vec<_>>() ; "data 0x01..0xFF")]
+    fn test_positive_roundtrip_eff_codec(bytes_orig: &[u8]) {
+        let bytes = Cursor::new(bytes_orig).bytes().into_iter();
+        let mut encoded_words = Encode::<_, EffEncode<_>>::encode(bytes)
+            .collect::<Result<String, _>>()
+            .unwrap();
+        let mut cursor = Cursor::new(encoded_words);
+        let words_chars = cursor.chars().into_iter();
+        let decoded_bytes = Decode::<_, EffDecode<_>>::decode(words_chars)
+            .collect::<Result<Vec<_>, _>>()
+            .unwrap();
+        assert_eq!(bytes_orig, decoded_bytes);
+    }
+}
