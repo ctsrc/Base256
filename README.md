@@ -220,13 +220,15 @@ Practical example using the file `sample_data/original/id_ed25519` as the
 data we want to compress, encode, type in on another device and
 decode and decompress:
 
-- Compress data from some file with xz and then encode it.
+- Compress data from example file `sample_data/original/id_ed25519` with xz
+  and then encode it.
 
   ```zsh
   xz < sample_data/original/id_ed25519 | lastresort | fold -w 78 -s | awk '{$1=$1};1'
   ```
 
-- On the other device, input the encoded words into a text file and then decode and decompress that
+- On the other device, input the encoded words into a text file
+  and then decode and decompress that
 
   ```zsh
   mkdir -p ~/tmp/
