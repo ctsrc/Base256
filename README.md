@@ -216,9 +216,11 @@ Then use lastresort to encode the compressed data. On the other device
 you then decode with lastresort and then decompress that with the decompression
 tool corresponding to the compression tool you used.
 
-Practical example:
+Practical example using the file `sample_data/original/id_ed25519` as the
+data we want to compress, encode, type in on another device and
+decode and decompress.
 
-- Compress data with xz and then encode it
+- Compress data from some file with xz and then encode it.
 
   ```zsh
   xz < sample_data/original/id_ed25519 | lastresort | fold -w 78 -s | awk '{$1=$1};1'
