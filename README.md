@@ -153,7 +153,7 @@ For the sake of brevity, the base 256 encoded output that results
 when using the legacy encoder is omitted from this README.
 
 The base 256 encoded output that results when using the default
-encoder is shown in the next subsection.
+encoder is shown in the subsection below.
 
 ### Example output using the PGP Word List encoder
 
