@@ -25,6 +25,15 @@ while reading and typing or speaking.
 by either keyboard or voice input less error-prone compared to
 typing in the base 16 or base 64 encoding of said data.
 
+Sample use-cases include:
+
+- typing in your SSH private key on a computer that is running a
+  live USB stick copy of its OS without persistent storage,
+  and which doesn't have a usable webcam leaving you
+  unable to enter the data using a QR-code.
+- relaying the contents of binary files to another person
+  over a voice channel.
+
 Here is a quick example:
 
 Imagine a file with three bytes in it. A hexadecimal dump of this file
@@ -48,20 +57,6 @@ in either base 16 or base 64 encoding.
 But when the amount of data increases, it becomes more and more tricky
 to manually type in the bytes by hand or to read them out loud in base 16
 or in base 64.
-
-When might you want to type in the bytes of a file by hand, or to read
-them out loud anyways?
-
-Sample use-cases include:
-
-- typing in your SSH private key on a computer that is running a
-  live USB stick copy of its OS without persistent storage,
-  and which doesn't have a usable webcam leaving you
-  unable to enter the data using a QR-code.
-- relaying the contents of binary files to another person
-  over a voice channel.
-
-Anyways, to continue with the example from above of the three bytes.
 
 In `lastresort` base 256 using the default codec PGP Word List, the bytes
 from the example above are represented as:
