@@ -80,8 +80,7 @@ By now, you should see both:
 
 ### PGP Word List
 
-> The PGP Word List ("Pretty Good Privacy word list", also called
-> a biometric word list [...]) is a list of words for conveying data bytes
+> The PGP Word List [...] is a list of words for conveying data bytes
 > in a clear unambiguous way via a voice channel. They are analogous
 > in purpose to the NATO phonetic alphabet used by pilots,
 > except a longer list of words is used, each word corresponding
@@ -89,9 +88,7 @@ By now, you should see both:
 >
 > [...]
 >
-> The list is actually composed of two lists, each containing
-> 256 phonetically distinct words, in which each word represents
-> a different byte value between 0 and 255. Two lists are used
+> The list is actually composed of two lists [...]. Two lists are used
 > because reading aloud long random sequences of human words
 > usually risks three kinds of errors:
 > 1) transposition of two consecutive words,
@@ -100,12 +97,6 @@ By now, you should see both:
 >
 > To detect all three kinds of errors, the two lists are used alternately
 > for the even-offset bytes and the odd-offset bytes in the byte sequence.
-> Each byte value is actually represented by two different words,
-> depending on whether that byte appears at an even or an odd offset
-> from the beginning of the byte sequence. The two lists are
-> readily distinguished by the number of syllables;
-> the even list has words of two syllables, the odd list has three.
-> The two lists have a maximum word length of 9 and 11 letters, respectively.
 
 https://en.wikipedia.org/wiki/PGP_word_list
 
