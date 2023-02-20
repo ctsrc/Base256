@@ -149,8 +149,11 @@ p0r3nHUmj+QkHx6zg7YdAAAAEGVyaWtuQGxpYmVyYXRpb24BAgMEBQ==
 -----END OPENSSH PRIVATE KEY-----
 ```
 
-The corresponding base 256 encoded outputs using each of the different
-codecs available in `lastresort` are shown is the subsections below.
+For the sake of brevity, the output that results when using
+the legacy encoder is omitted from this README.
+
+The base 256 encoded output that results when using the default
+encoder is shown in the next subsection.
 
 ### Example output using the PGP Word List encoder
 
@@ -213,67 +216,6 @@ commando crusade enchanting crumpled cannonball dropper enterprise crusade
 enchanting dwelling escapade deckhand cannonball drumbeat equipment dogsled 
 examine cranky Eskimo crusade cannonball dragnet dinosaur endow commando 
 button commando button commando allow
-```
-
-### Example output using the EFF Short Wordlist 2.0 encoder
-
-If we run `lastresort` with the above private key `id_ed25519`
-as input, and we use the EFF Short Wordlist 2.0 codec:
-
-```zsh
-cargo run -- -e eff -i sample_data/original/id_ed25519 | fold -w 78 -s
-```
-
-We get the following base 256 encoded output:
-
-```text
-carrot carrot carrot carrot carrot dealer depot dictionary directory dryer 
-badass dugout dustpan depot dryer ebook ebook dimple badass dustpan eagerness 
-directory eggnog daughter ecosystem depot badass dominoes depot elsewhere 
-carrot carrot carrot carrot carrot alchemy eskimo clay dealer federal eskimo 
-fettuccine dryer geyser ergonomic deepness chopsticks foamless embroidery 
-eliminator faucet fox etiquette falcon depot daughter daughter daughter 
-daughter daughter dealer dictionary codeword gainfully eskimo femur educator 
-daughter daughter daughter daughter depot eskimo femur crawfish frosting 
-embroidery dwelling daughter daughter daughter daughter daughter daughter 
-daughter daughter daughter dealer daughter daughter daughter daughter dresser 
-garlic daughter daughter daughter daughter fox geyser estrogen cinnamon 
-exfoliate fox embroidery elbow alchemy dwelling geographer dryer ecosystem 
-educator gearbox dugout dwelling daughter daughter daughter deepness deepness 
-etiquette depot codeword embroidery ecosystem cinnamon device geographer 
-daughter fleshiness dugout cement codeword etiquette evolution dresser 
-dizziness dimple embroidery cinnamon double fondue dominoes etiquette 
-dominoes crawfish codeword gearbox chopsticks dizziness fictitious cement 
-faucet dizziness dealer couch euthanize fondue clubhouse dugout cinnamon 
-dimple dwelling daughter daughter daughter dizziness fabric geographer cage 
-eggnog cohabitate cohabitate fondue gainfully federal euthanize alchemy 
-frosting exfoliate daughter daughter daughter daughter fox geyser estrogen 
-cinnamon exfoliate fox embroidery elbow dwelling geographer dryer ecosystem 
-educator gearbox dugout dwelling daughter daughter daughter deepness deepness 
-etiquette depot codeword embroidery ecosystem cinnamon device geographer 
-daughter fleshiness dugout cement codeword etiquette evolution dresser 
-dizziness dimple embroidery cinnamon double fondue dominoes etiquette 
-dominoes crawfish codeword gearbox chopsticks dizziness fictitious cement 
-faucet dizziness dealer couch euthanize fondue clubhouse dugout cinnamon 
-dimple dwelling alchemy daughter daughter daughter depot daughter daughter 
-foamless chalkboard dugout frosting cage fictitious etiquette crawfish 
-dizziness fettuccine estrogen cage fleshiness eskimo chalkboard eggnog 
-ecosystem fleshiness clubhouse geyser fox clay exfoliate device cohabitate 
-chalkboard cage chalkboard directory ecosystem eagerness federal double clay 
-dimple geographer eskimo fleshiness dictionary double dictionary codeword 
-chalkboard ecosystem federal federal dustpan elsewhere eliminator directory 
-deepness fictitious copier cement federal chopsticks couch garlic faucet 
-etiquette fettuccine elsewhere frosting garlic alchemy finalist chalkboard 
-foamless clay fettuccine dimple educator femur falcon cage dwelling faucet 
-dimple gearbox cohabitate geyser exfoliate copier elsewhere etiquette 
-daughter daughter daughter daughter depot dictionary eggnog geographer 
-ergonomic elbow fox frosting dwelling dictionary gearbox finalist elsewhere 
-femur eggnog geographer elsewhere eliminator eagerness finalist eskimo 
-cinnamon clubhouse dealer daughter exfoliate dresser depot dealer dwelling 
-cybernetic cybernetic alchemy carrot carrot carrot carrot carrot depot dryer 
-deliverer badass dugout dustpan depot dryer ebook ebook dimple badass dustpan 
-eagerness directory eggnog daughter ecosystem depot badass dominoes depot 
-elsewhere carrot carrot carrot carrot carrot alchemy
 ```
 
 ## Usage
