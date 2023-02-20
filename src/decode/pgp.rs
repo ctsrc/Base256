@@ -133,7 +133,7 @@ where
     }
 }
 
-impl<I: Iterator<Item = Result<char, D>>, D> crate::Decode<I, PgpDecode<I>> for I {
+impl<I: Iterator<Item = Result<char, E>>, E> crate::Decode<I, PgpDecode<I>> for I {
     fn decode(self) -> PgpDecode<I> {
         PgpDecode {
             iter: self,

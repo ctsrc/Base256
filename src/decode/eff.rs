@@ -126,7 +126,7 @@ where
     }
 }
 
-impl<I: Iterator<Item = Result<char, D>>, D> crate::Decode<I, EffDecode<I>> for I {
+impl<I: Iterator<Item = Result<char, E>>, E> crate::Decode<I, EffDecode<I>> for I {
     fn decode(self) -> EffDecode<I> {
         EffDecode {
             iter: self,
