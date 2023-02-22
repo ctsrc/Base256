@@ -353,7 +353,7 @@ fn main() -> Result<()> {
         }
 
         if did_write_any_words {
-            write!(output, "\n")?;
+            writeln!(output)?;
         }
     }
 
