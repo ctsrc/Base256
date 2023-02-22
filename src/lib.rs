@@ -70,7 +70,7 @@ mod test_cases_encode {
     #[test_case(&*(0x01u8..=0xFF).collect::<Vec<_>>() ; "data 0x01..0xFF")]
     fn test_positive_roundtrip_pgp_codec(bytes_orig: &[u8]) {
         let bytes = Cursor::new(bytes_orig).bytes().into_iter();
-        let mut encoded_words = Encode::<_, PgpEncode<_>>::encode(bytes)
+        let encoded_words = Encode::<_, PgpEncode<_>>::encode(bytes)
             .collect::<Result<String, _>>()
             .unwrap();
         let mut cursor = Cursor::new(encoded_words);
@@ -87,7 +87,7 @@ mod test_cases_encode {
     #[test_case(&*(0x01u8..=0xFF).collect::<Vec<_>>() ; "data 0x01..0xFF")]
     fn test_positive_roundtrip_eff_codec(bytes_orig: &[u8]) {
         let bytes = Cursor::new(bytes_orig).bytes().into_iter();
-        let mut encoded_words = Encode::<_, EffEncode<_>>::encode(bytes)
+        let encoded_words = Encode::<_, EffEncode<_>>::encode(bytes)
             .collect::<Result<String, _>>()
             .unwrap();
         let mut cursor = Cursor::new(encoded_words);
