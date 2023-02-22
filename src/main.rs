@@ -325,11 +325,14 @@ fn main() -> Result<()> {
         #[cfg(not(any(feature = "decode", feature = "encode_pgp")))]
         let encoder = encoder;
 
+        let mut did_write_any_words = false;
+
         match encoder {
             #[cfg(feature = "encode_pgp")]
             Encoder::Pgp => {
                 let mut encoded = Encode::<_, PgpEncode<_>>::encode(input_bytes);
                 if let Some(word) = encoded.next() {
+                    did_write_any_words = true;
                     write!(output, "{}", word?)?;
                 }
                 for word in encoded {
@@ -340,12 +343,17 @@ fn main() -> Result<()> {
             Encoder::Eff => {
                 let mut encoded = Encode::<_, EffEncode<_>>::encode(input_bytes);
                 if let Some(word) = encoded.next() {
+                    did_write_any_words = true;
                     write!(output, "{}", word?)?;
                 }
                 for word in encoded {
                     write!(output, " {}", word?)?
                 }
             }
+        }
+
+        if did_write_any_words {
+            write!(output, "\n")?;
         }
     }
 
